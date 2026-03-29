@@ -1,7 +1,7 @@
 import { HeroSection } from '@/components/sections/HeroSection'
+import { ServicesSection } from '@/components/sections/ServicesSection'
 import { StatsSection } from '@/components/sections/StatsSection'
 import { WhatsAppInfoSection } from '@/components/sections/WhatsAppInfoSection'
-import { ServicesSection } from '@/components/sections/ServicesSection'
 import { HowItWorksSection } from '@/components/sections/HowItWorksSection'
 import { PartnersSection } from '@/components/sections/PartnersSection'
 import { TestimonialsSection } from '@/components/sections/TestimonialsSection'
@@ -13,9 +13,9 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
+      <ServicesSection />
       <StatsSection />
       <WhatsAppInfoSection />
-      <ServicesSection />
       <HowItWorksSection />
       <PartnersSection />
       <TestimonialsSection />

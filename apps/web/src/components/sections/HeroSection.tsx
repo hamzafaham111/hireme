@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { WhatsAppButton } from '@/components/WhatsAppButton'
 import { GridBackdrop } from '@/components/ui/GridBackdrop'
 import { siteName } from '@/lib/site'
@@ -27,12 +28,13 @@ export function HeroSection() {
           <WhatsAppButton className="px-3 py-3.5 text-base">
             Book on WhatsApp
           </WhatsAppButton>
-          <a
+          <Link
             href="/#how-it-works"
+            scroll={false}
             className="text-center text-sm font-semibold text-brand-700 hover:text-brand-600 dark:text-brand-300 dark:hover:text-brand-200 sm:text-left"
           >
             See how it works →
-          </a>
+          </Link>
         </div>
       </div>
     </section>

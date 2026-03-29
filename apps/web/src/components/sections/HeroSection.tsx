@@ -1,13 +1,11 @@
-import { siteName } from '@/lib/site'
 import { WhatsAppButton } from '@/components/WhatsAppButton'
+import { GridBackdrop } from '@/components/ui/GridBackdrop'
+import { siteName } from '@/lib/site'
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden border-b border-slate-200/80 dark:border-slate-800">
-      <div
-        className="pointer-events-none absolute inset-0 bg-[length:40px_40px] bg-grid-slate dark:opacity-40"
-        aria-hidden
-      />
+    <section className="relative hidden md:block overflow-hidden border-b border-slate-200/80 dark:border-slate-800">
+      <GridBackdrop className="dark:opacity-40" />
       <div className="pointer-events-none absolute -right-32 -top-32 size-[480px] rounded-full bg-brand-500/15 blur-3xl dark:bg-brand-500/20" />
       <div className="pointer-events-none absolute -bottom-48 -left-32 size-[420px] rounded-full bg-violet-500/10 blur-3xl" />
 

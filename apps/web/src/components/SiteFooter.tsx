@@ -1,6 +1,9 @@
 import Link from 'next/link'
+import { FOOTER_LINK_GROUPS } from '@/lib/site-nav'
 import { siteName } from '@/lib/site'
 import { WhatsAppButton } from '@/components/WhatsAppButton'
+
+const footerLinkClass = 'hover:text-brand-600 dark:hover:text-brand-400'
 
 export function SiteFooter() {
   const y = new Date().getFullYear()
@@ -21,62 +24,29 @@ export function SiteFooter() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-10 text-sm sm:grid-cols-3">
-            <div>
-              <p className="font-semibold text-slate-900 dark:text-white">
-                Explore
-              </p>
-              <ul className="mt-3 space-y-2 text-slate-600 dark:text-slate-400">
-                <li>
-                  <Link href="/#services" className="hover:text-brand-600">
-                    Services
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/#how-it-works" className="hover:text-brand-600">
-                    How it works
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/#reviews" className="hover:text-brand-600">
-                    Reviews
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-semibold text-slate-900 dark:text-white">
-                Company
-              </p>
-              <ul className="mt-3 space-y-2 text-slate-600 dark:text-slate-400">
-                <li>
-                  <Link href="/#partners" className="hover:text-brand-600">
-                    Partners
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/#faq" className="hover:text-brand-600">
-                    FAQ
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div className="col-span-2 sm:col-span-1">
-              <p className="font-semibold text-slate-900 dark:text-white">
-                Legal
-              </p>
-              <ul className="mt-3 space-y-2 text-slate-600 dark:text-slate-400">
-                <li>
-                  <Link href="/privacy" className="hover:text-brand-600">
-                    Privacy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/terms" className="hover:text-brand-600">
-                    Terms
-                  </Link>
-                </li>
-              </ul>
-            </div>
+            {FOOTER_LINK_GROUPS.map((group, index) => (
+              <div
+                key={group.title}
+                className={
+                  index === FOOTER_LINK_GROUPS.length - 1
+                    ? 'col-span-2 sm:col-span-1'
+                    : undefined
+                }
+              >
+                <p className="font-semibold text-slate-900 dark:text-white">
+                  {group.title}
+                </p>
+                <ul className="mt-3 space-y-2 text-slate-600 dark:text-slate-400">
+                  {group.links.map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href} className={footerLinkClass}>
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
         <p className="mt-12 border-t border-slate-100 pt-8 text-center text-xs text-slate-500 dark:border-slate-800 dark:text-slate-500">

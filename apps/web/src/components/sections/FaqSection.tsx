@@ -34,7 +34,10 @@ export function FaqSection() {
   const [open, setOpen] = useState<number | null>(0)
 
   return (
-    <section id="faq" className="scroll-mt-20 py-14 sm:py-16">
+    <section
+      id="faq"
+      className="scroll-mt-[var(--site-sticky-header-offset)] py-14 sm:py-16"
+    >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionIntro
           eyebrow="FAQ"

@@ -1,76 +1,22 @@
-import type { FC, SVGProps } from 'react'
+import type { FC } from 'react'
+import type { SiteIconProps } from '@/components/icons/site-icons'
+import {
+  IconMapPin,
+  IconMessageSpark,
+  IconPhoto,
+} from '@/components/icons/site-icons'
 import { SectionIntro } from '@/components/sections/SectionIntro'
 import { WhatsAppButton } from '@/components/WhatsAppButton'
-
-type IconProps = SVGProps<SVGSVGElement>
-
-function IconChat({ className, ...p }: IconProps) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      {...p}
-    >
-      <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7H8l-5 3v-3.3a8.5 8.5 0 01-1.7-9.2 8.38 8.38 0 013.8-.9" />
-      <path d="M15.5 3.5l.6 2.2 2.2.6-2.2.6-.6 2.2-.6-2.2-2.2-.6 2.2-.6z" />
-    </svg>
-  )
-}
-
-function IconMapPin({ className, ...p }: IconProps) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      {...p}
-    >
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-      <circle cx="12" cy="10" r="3" />
-    </svg>
-  )
-}
-
-function IconPhoto({ className, ...p }: IconProps) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      {...p}
-    >
-      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-      <circle cx="8.5" cy="8.5" r="1.5" />
-      <path d="M21 15l-5-5L5 21" />
-    </svg>
-  )
-}
 
 const quickTips: {
   title: string
   hint: string
-  Icon: FC<IconProps>
+  Icon: FC<SiteIconProps>
 }[] = [
   {
     title: 'Say what you need',
     hint: 'One line is fine—pick up, shop, deliver, wait in line…',
-    Icon: IconChat,
+    Icon: IconMessageSpark,
   },
   {
     title: 'Where & when',

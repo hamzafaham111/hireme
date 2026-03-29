@@ -5,10 +5,14 @@ function apiBase(): string {
   return raw && raw.length > 0 ? raw.replace(/\/$/, '') : 'http://localhost:4000/api/v1'
 }
 
-async function parseJson<T>(res: Response): Promise<T> {
+async function parseJson<T>(res: Response): Promise<T | null> {
   const text = await res.text()
-  if (!text) return undefined as T
-  return JSON.parse(text) as T
+  if (!text) return null
+  try {
+    return JSON.parse(text) as T
+  } catch {
+    return null
+  }
 }
 
 /**
@@ -19,7 +23,8 @@ export async function fetchPublishedPosts(): Promise<BlogPost[]> {
   try {
     const res = await fetch(`${apiBase()}/blog/posts`, { next: { revalidate: 60 } })
     if (!res.ok) return []
-    return parseJson<BlogPost[]>(res)
+    const data = await parseJson<BlogPost[]>(res)
+    return Array.isArray(data) ? data : []
   } catch {
     return []
   }
@@ -33,7 +38,7 @@ export async function fetchPostBySlug(slug: string): Promise<BlogPost | null> {
     })
     if (res.status === 404) return null
     if (!res.ok) return null
-    return parseJson<BlogPost>(res)
+    return (await parseJson<BlogPost>(res)) ?? null
   } catch {
     return null
   }

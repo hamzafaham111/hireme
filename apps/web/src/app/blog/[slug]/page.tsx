@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { BlogMarkdown } from '@/components/BlogMarkdown'
 import { siteName } from '@/lib/site'
 import { fetchPostBySlug, fetchPublishedPosts, siteOrigin } from '@/lib/blogPublic'
+import { formatLongDate } from '@/lib/format-date'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -53,13 +54,7 @@ export default async function BlogPostPage({ params }: Props) {
         </h1>
         <p className="mt-3 text-lg text-slate-600 dark:text-slate-400">{post.excerpt}</p>
         <p className="mt-4 text-sm text-slate-500">
-          {post.publishedAt
-            ? new Date(post.publishedAt).toLocaleDateString(undefined, {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })
-            : null}
+          {post.publishedAt ? formatLongDate(post.publishedAt) : null}
           {post.authorName ? ` · ${post.authorName}` : null}
         </p>
       </header>

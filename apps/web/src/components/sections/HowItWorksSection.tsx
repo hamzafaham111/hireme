@@ -1,107 +1,16 @@
-import type { FC, SVGProps } from 'react'
+import type { FC } from 'react'
+import type { SiteIconProps } from '@/components/icons/site-icons'
+import {
+  IconConfirmScope,
+  IconDescribeErrand,
+  IconProofDone,
+  IconRunErrand,
+  IconStepArrow,
+} from '@/components/icons/site-icons'
 import { SectionIntro } from '@/components/sections/SectionIntro'
+import { GridBackdrop } from '@/components/ui/GridBackdrop'
 import { siteName } from '@/lib/site'
 import { WhatsAppButton } from '@/components/WhatsAppButton'
-
-type IconProps = SVGProps<SVGSVGElement>
-
-/** Step icons — same stroke weight as service cards for a cohesive marketing story. */
-function IconDescribeErrand({ className, ...p }: IconProps) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      {...p}
-    >
-      <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7H8l-5 3v-3.3a8.5 8.5 0 01-1.7-9.2 8.38 8.38 0 013.8-.9" />
-      <path d="M15.5 3.5l.6 2.2 2.2.6-2.2.6-.6 2.2-.6-2.2-2.2-.6 2.2-.6z" />
-    </svg>
-  )
-}
-
-function IconConfirmScope({ className, ...p }: IconProps) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      {...p}
-    >
-      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-      <path d="M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-      <path d="m9 14 2 2 4-4" />
-    </svg>
-  )
-}
-
-function IconRunErrand({ className, ...p }: IconProps) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      {...p}
-    >
-      <path d="M14 18V6a2 2 0 00-2-2H4a2 2 0 00-2 2v11a1 1 0 001 1h2" />
-      <path d="M15 18H9" />
-      <path d="M19 18h2a1 1 0 001-1v-3.65a1 1 0 00-.22-.624l-3.48-4.35A1 1 0 0017.52 8H14" />
-      <circle cx="17" cy="18" r="2" />
-      <circle cx="7" cy="18" r="2" />
-    </svg>
-  )
-}
-
-function IconProofDone({ className, ...p }: IconProps) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      {...p}
-    >
-      <path d="M9 12l2 2 4-4" />
-      <circle cx="12" cy="12" r="9" />
-    </svg>
-  )
-}
-
-function StepArrow({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M5 12h14M13 6l6 6-6 6" />
-    </svg>
-  )
-}
 
 /**
  * Horizontal bridge between desktop step cards: gradient lines run slightly into each card
@@ -116,7 +25,7 @@ function StepConnector() {
     >
       <div className="h-0.5 min-w-0 flex-1 rounded-full bg-gradient-to-r from-transparent via-brand-300/80 to-brand-500/90 dark:from-transparent dark:via-brand-500/50 dark:to-brand-400/80" />
       <div className="mx-0.5 flex size-7 shrink-0 items-center justify-center rounded-full border border-brand-200/80 bg-white shadow-sm ring-2 ring-white dark:border-brand-500/40 dark:bg-slate-900 dark:ring-slate-950">
-        <StepArrow className="size-3.5 text-brand-600 dark:text-brand-400" />
+        <IconStepArrow className="size-3.5 text-brand-600 dark:text-brand-400" />
       </div>
       <div className="h-0.5 min-w-0 flex-1 rounded-full bg-gradient-to-r from-violet-500/90 via-violet-300/75 to-transparent dark:from-brand-400/80 dark:via-brand-500/45 dark:to-transparent" />
     </div>
@@ -127,7 +36,7 @@ const steps: {
   step: string
   title: string
   body: string
-  Icon: FC<IconProps>
+  Icon: FC<SiteIconProps>
 }[] = [
   {
     step: '1',
@@ -159,16 +68,13 @@ export function HowItWorksSection() {
   return (
     <section
       id="how-it-works"
-      className="relative scroll-mt-20 overflow-hidden border-b border-slate-200 bg-white py-14 sm:py-20 dark:border-slate-800 dark:bg-slate-950"
+      className="relative scroll-mt-[var(--site-sticky-header-offset)] overflow-hidden border-b border-slate-200 bg-white py-14 sm:py-20 dark:border-slate-800 dark:bg-slate-950"
     >
-      <div
-        className="pointer-events-none absolute inset-0 bg-[length:40px_40px] bg-grid-slate opacity-40 dark:opacity-25"
-        aria-hidden
-      />
+      <GridBackdrop className="opacity-40 dark:opacity-25" />
       <div className="pointer-events-none absolute -right-24 top-0 size-72 rounded-full bg-violet-500/10 blur-3xl dark:bg-violet-500/15" />
       <div className="pointer-events-none absolute -left-24 bottom-0 size-72 rounded-full bg-brand-500/10 blur-3xl dark:bg-brand-500/15" />
 
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionIntro
           eyebrow="From message to done"
           title={`How ${siteName} works`}

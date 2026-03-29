@@ -46,7 +46,7 @@ export function TestimonialsSection() {
   return (
     <section
       id="reviews"
-      className="scroll-mt-20 border-t border-slate-200 bg-gradient-to-b from-brand-50/50 to-transparent py-14 dark:border-slate-800 dark:from-brand-950/20 sm:py-16"
+      className="scroll-mt-[var(--site-sticky-header-offset)] border-t border-slate-200 bg-gradient-to-b from-brand-50/50 to-transparent py-14 dark:border-slate-800 dark:from-brand-950/20 sm:py-16"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionIntro

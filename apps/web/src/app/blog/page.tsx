@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { fetchPublishedPosts, siteOrigin } from '@/lib/blogPublic'
+import { formatLongDate } from '@/lib/format-date'
 import { siteName } from '@/lib/site'
 
 export const metadata: Metadata = {
@@ -39,11 +40,7 @@ export default async function BlogIndexPage() {
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{p.excerpt}</p>
                 {p.publishedAt ? (
                   <p className="mt-2 text-xs text-slate-500">
-                    {new Date(p.publishedAt).toLocaleDateString(undefined, {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
+                    {formatLongDate(p.publishedAt)}
                   </p>
                 ) : null}
               </article>

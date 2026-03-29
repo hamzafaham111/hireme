@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import { HomeHashScroll } from '@/components/HomeHashScroll'
-import { MobileWhatsAppBar } from '@/components/MobileWhatsAppBar'
+import { MobileTabBar } from '@/components/MobileTabBar'
 import { SiteHeader } from '@/components/SiteHeader'
 import { SiteFooter } from '@/components/SiteFooter'
 import { siteName, siteTagline } from '@/lib/site'
@@ -42,11 +42,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${inter.variable} ${display.variable} min-h-screen font-sans`}
+        className={`${inter.variable} ${display.variable} min-h-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] font-sans md:pb-0`}
       >
         <SiteHeader />
         <HomeHashScroll />
         <main>{children}</main>
+        <MobileTabBar />
         <SiteFooter />
       </body>
     </html>

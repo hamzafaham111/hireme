@@ -14,7 +14,7 @@ export function PartnersSection() {
   return (
     <section
       id="partners"
-      className="scroll-mt-20 border-b border-slate-200 py-14 dark:border-slate-800 sm:py-16"
+      className="scroll-mt-[var(--site-sticky-header-offset)] border-b border-slate-200 py-14 dark:border-slate-800 sm:py-16"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionIntro

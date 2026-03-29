@@ -3,6 +3,10 @@
  */
 export const siteName = 'Hire Me'
 
+/** Shown in the header search strip (map pin + “City, Country”). Override with NEXT_PUBLIC_SERVICE_LOCATION. */
+export const siteServiceLocation =
+  process.env.NEXT_PUBLIC_SERVICE_LOCATION ?? 'Karachi, Pakistan'
+
 export const siteTagline =
   'Errands, deliveries, and help on WhatsApp—whatever you need, just message us.'
 

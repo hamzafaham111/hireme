@@ -4,6 +4,18 @@
 
 :root {
   scroll-behavior: smooth;
+  /**
+   * Hash links (`/#services`, etc.) and `scrollIntoView` use the target’s scroll-margin.
+   * Must clear `SiteHeader`: top bar (h-16) + stacked location + search on narrow screens.
+   */
+  --site-sticky-header-offset: 11.5rem;
+}
+
+@media (min-width: 640px) {
+  :root {
+    /* `sm:` row layout shortens the header; keep a little buffer below the bar. */
+    --site-sticky-header-offset: 9rem;
+  }
 }
 
 @layer base {

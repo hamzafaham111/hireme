@@ -1,50 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { useCallback, useEffect, useId, useState } from 'react'
-import { createPortal } from 'react-dom'
-import { siteName } from '@/lib/site'
+import { useId } from 'react'
+import { PRIMARY_NAV } from '@/lib/site-nav'
+import { siteName, siteServiceLocation } from '@/lib/site'
 import { WhatsAppButton } from '@/components/WhatsAppButton'
 
-/** Root + hash so sections resolve on `/`; plain `#foo` would stick to `/blog#foo` etc. */
-const nav = [
-  { href: '/blog', label: 'Blog', isRoute: true as const },
-  { href: '/#services', label: 'Services' },
-  { href: '/#how-it-works', label: 'How it works' },
-  { href: '/#partners', label: 'Partners' },
-  { href: '/#reviews', label: 'Reviews' },
-  { href: '/#faq', label: 'FAQ' },
-] as const
-
-function MenuIcon({ open }: { open: boolean }) {
-  return (
-    <svg
-      className="size-6"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      aria-hidden
-    >
-      {open ? (
-        <>
-          <path d="M18 6L6 18" />
-          <path d="M6 6l12 12" />
-        </>
-      ) : (
-        <>
-          <path d="M4 6h16" />
-          <path d="M4 12h16" />
-          <path d="M4 18h16" />
-        </>
-      )}
-    </svg>
-  )
-}
-
-/** Drawer close control — explicit X so users can dismiss without the header hamburger. */
-function CloseCrossIcon({ className }: { className?: string }) {
+function SearchIcon({ className }: { className?: string }) {
   return (
     <svg
       className={className}
@@ -53,135 +15,81 @@ function CloseCrossIcon({ className }: { className?: string }) {
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden
     >
-      <path d="M18 6L6 18" />
-      <path d="M6 6l12 12" />
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  )
+}
+
+function MicIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+      <path d="M19 10v1a7 7 0 0 1-14 0v-1" />
+      <path d="M12 19v3" />
+      <path d="M8 22h8" />
+    </svg>
+  )
+}
+
+function FilterIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M22 3H2l8 9.32V19l4 2v-6.68L22 3Z" />
+    </svg>
+  )
+}
+
+function MapPinIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
+      <circle cx="12" cy="10" r="3" />
     </svg>
   )
 }
 
 export function SiteHeader() {
-  const [menuOpen, setMenuOpen] = useState(false)
-  /** Overlay must mount after hydration so we can portal to document.body. */
-  const [portalReady, setPortalReady] = useState(false)
-  const drawerId = useId()
-
-  const closeMenu = useCallback(() => setMenuOpen(false), [])
-
-  useEffect(() => {
-    setPortalReady(true)
-  }, [])
-
-  useEffect(() => {
-    if (!menuOpen) return
-    const prevOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = prevOverflow
-    }
-  }, [menuOpen])
-
-  useEffect(() => {
-    if (!menuOpen) return
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeMenu()
-    }
-    document.addEventListener('keydown', onKeyDown)
-    return () => document.removeEventListener('keydown', onKeyDown)
-  }, [menuOpen, closeMenu])
-
-  const mobileOverlay =
-    portalReady &&
-    createPortal(
-      <div
-        className={`fixed inset-0 z-[200] md:hidden ${
-          menuOpen ? 'pointer-events-auto' : 'pointer-events-none'
-        }`}
-        aria-hidden={!menuOpen}
-      >
-        {/* Portaled to body so backdrop-blur on <header> does not trap fixed layers under <main> */}
-        <aside
-          id={drawerId}
-          className={`relative z-10 flex h-full w-[min(100%,18rem)] max-w-[85vw] flex-col border-r border-slate-200 bg-white shadow-2xl transition-transform duration-300 ease-out dark:border-slate-700 dark:bg-slate-900 ${
-            menuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-          inert={!menuOpen}
-          aria-hidden={!menuOpen}
-          aria-label="Mobile navigation"
-        >
-          <div className="flex h-16 shrink-0 items-center justify-between gap-2 border-b border-slate-200 bg-white px-3 dark:border-slate-700 dark:bg-slate-900">
-            <span className="font-display text-sm font-semibold text-slate-600 dark:text-slate-300">
-              Menu
-            </span>
-            <button
-              type="button"
-              className="inline-flex rounded-lg p-2 text-slate-600 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 dark:text-slate-300 dark:hover:bg-slate-800"
-              aria-label="Close menu"
-              onClick={closeMenu}
-            >
-              <CloseCrossIcon className="size-5" />
-            </button>
-          </div>
-          <nav
-            className="flex flex-1 flex-col gap-1 overflow-y-auto bg-white p-3 text-sm font-medium text-slate-700 dark:bg-slate-900 dark:text-slate-200"
-            aria-label="Primary mobile"
-          >
-            {nav.map((item) =>
-              'isRoute' in item && item.isRoute ? (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="rounded-lg px-3 py-2.5 transition hover:bg-slate-100 dark:hover:bg-slate-900"
-                  onClick={closeMenu}
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="rounded-lg px-3 py-2.5 transition hover:bg-slate-100 dark:hover:bg-slate-900"
-                  onClick={closeMenu}
-                >
-                  {item.label}
-                </Link>
-              ),
-            )}
-          </nav>
-        </aside>
-        <button
-          type="button"
-          className={`absolute inset-0 z-0 bg-slate-900/50 transition-opacity duration-300 dark:bg-black/60 ${
-            menuOpen ? 'opacity-100' : 'opacity-0'
-          }`}
-          aria-label="Close menu"
-          tabIndex={-1}
-          onClick={closeMenu}
-        />
-      </div>,
-      document.body,
-    )
+  const searchFieldId = useId()
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/80">
+      <header className="sticky top-0 z-50 bg-white">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-            <button
-              type="button"
-              className="-ml-1 inline-flex rounded-lg text-slate-700 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 md:hidden dark:text-slate-200 dark:hover:bg-slate-800"
-              aria-expanded={menuOpen}
-              aria-controls={drawerId}
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-              onClick={() => setMenuOpen((o) => !o)}
-            >
-              <MenuIcon open={menuOpen} />
-            </button>
             <Link
               href="/"
               className="truncate font-display text-lg font-bold tracking-tight text-brand-700 dark:text-brand-300"
-              onClick={closeMenu}
             >
               {siteName}
             </Link>
@@ -191,25 +99,15 @@ export function SiteHeader() {
             className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex dark:text-slate-300"
             aria-label="Primary"
           >
-            {nav.map((item) =>
-              'isRoute' in item && item.isRoute ? (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="transition hover:text-brand-600 dark:hover:text-brand-400"
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="transition hover:text-brand-600 dark:hover:text-brand-400"
-                >
-                  {item.label}
-                </Link>
-              ),
-            )}
+            {PRIMARY_NAV.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="transition hover:text-brand-600 dark:hover:text-brand-400"
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
 
           <WhatsAppButton className="gap-2 px-3 py-2 text-xs sm:px-5 sm:text-sm">
@@ -217,8 +115,52 @@ export function SiteHeader() {
             <span className="sr-only sm:hidden">Open WhatsApp</span>
           </WhatsAppButton>
         </div>
+        <div>
+        <form
+          className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:gap-4 sm:px-6 md:justify-between lg:px-8"
+          role="search"
+          aria-label="Find services"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <p className="flex min-w-0 shrink-0 items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200 sm:max-w-[min(100%,14rem)]">
+            <MapPinIcon className="size-5 shrink-0 text-brand-600 dark:text-brand-400" />
+            <span className="sr-only">Service area: </span>
+            <span className="truncate" title={siteServiceLocation}>
+              {siteServiceLocation}
+            </span>
+          </p>
+          <div className="flex min-w-0 w-full flex-1 items-stretch gap-2 md:w-auto md:max-w-lg md:flex-none lg:max-w-xl">
+            <div className="relative min-w-0 flex-1">
+              <label htmlFor={searchFieldId} className="sr-only">
+                Search services
+              </label>
+              <SearchIcon className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+              <input
+                id={searchFieldId}
+                type="search"
+                name="q"
+                placeholder="Search for services"
+                className="h-10 w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-11 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-brand-400"
+              />
+              <button
+                type="button"
+                className="absolute right-1.5 top-1/2 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+                aria-label="Search by voice"
+              >
+                <MicIcon className="size-4" />
+              </button>
+            </div>
+            <button
+              type="button"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-300 dark:hover:bg-slate-900"
+              aria-label="Filter services"
+            >
+              <FilterIcon className="size-4" />
+            </button>
+          </div>
+        </form>
+      </div>
       </header>
-      {mobileOverlay}
     </>
   )
 }

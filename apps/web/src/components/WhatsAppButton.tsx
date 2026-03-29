@@ -18,13 +18,15 @@ function WhatsAppIcon({ className }: { className?: string }) {
   )
 }
 
+export type WhatsAppButtonProps = {
+  children?: ReactNode
+  className?: string
+}
+
 export function WhatsAppButton({
   children = 'Chat on WhatsApp',
   className = '',
-}: {
-  children?: ReactNode
-  className?: string
-}) {
+}: WhatsAppButtonProps) {
   return (
     <Link
       href={whatsappHref()}

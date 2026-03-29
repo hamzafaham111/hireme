@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type MouseEvent } from 'react'
+import { scrollToHomeHash } from '@/lib/scroll-home-hash'
 import { MOBILE_TAB_ICONS } from '@/components/icons/site-icons'
 import { MOBILE_TAB_ITEMS } from '@/lib/site-nav'
 import { whatsappHref } from '@/lib/site'
@@ -13,10 +14,27 @@ const WHATSAPP_TAB_CLASS =
 
 type MobileTabId = 'home' | 'services' | 'how' | 'blog'
 
+/** After `router.push('/')` from another route: jump to section or top of home. */
+type PendingOnHome = { readonly kind: 'hash'; readonly value: string } | { readonly kind: 'top' }
+
+/**
+ * `history.replaceState` does not fire `hashchange`; subscribers must still re-read.
+ */
+function stripHashFromUrl(): void {
+  const { pathname, search } = window.location
+  window.history.replaceState(window.history.state, '', `${pathname}${search}`)
+  window.dispatchEvent(new Event('hashchange'))
+}
+
+/** Hash updates live outside React state; keep in module scope for ESLint immutability rules. */
+function setBrowserHash(fragment: string): void {
+  window.location.hash = fragment
+}
+
 /**
  * Subscribes to `hashchange` / `popstate` without `setState` inside effects (ESLint
  * `react-hooks/set-state-in-effect`). `pathname` is folded into the snapshot so
- * client navigations that omit those events still re-read `location.hash`.
+ * client navigations still re-read `location.hash`.
  */
 function useLocationHashForTabs(pathname: string): string {
   const subscribe = useCallback((onStoreChange: () => void) => {
@@ -60,15 +78,11 @@ const tabShell =
  */
 export function MobileTabBar() {
   const pathname = usePathname() ?? ''
+  const router = useRouter()
   const hash = useLocationHashForTabs(pathname)
 
-  /**
-   * URL is often one frame behind the tap (Next.js + hash). Optimistic highlight;
-   * drop it when the route path changes or the user uses history so we do not lie
-   * after back/forward (no synchronous setState in an effect — ESLint).
-   */
   const [pressedTabId, setPressedTabId] = useState<MobileTabId | null>(null)
-  const pathnameRef = useRef(pathname)
+  const pendingOnHomeRef = useRef<PendingOnHome | null>(null)
 
   useEffect(() => {
     const onPopState = () => setPressedTabId(null)
@@ -76,16 +90,63 @@ export function MobileTabBar() {
     return () => window.removeEventListener('popstate', onPopState)
   }, [])
 
+  /** Leaving `/` (e.g. Blog): drop optimistic tab once the new route is active. */
   useEffect(() => {
-    if (pathnameRef.current === pathname) return
-    pathnameRef.current = pathname
+    if (pathname === '/') return
     const id = requestAnimationFrame(() => setPressedTabId(null))
     return () => cancelAnimationFrame(id)
+  }, [pathname])
+
+  /**
+   * Landed on `/` from another path: apply queued hash or scroll-top, then drop
+   * optimistic state. `queueMicrotask` avoids Strict Mode cancelling a rAF cleanup
+   * before the hash is applied.
+   */
+  useEffect(() => {
+    if (pathname !== '/') return
+    const pending = pendingOnHomeRef.current
+    if (pending === null) return
+    pendingOnHomeRef.current = null
+    queueMicrotask(() => {
+      if (pending.kind === 'top') {
+        if (window.location.hash) stripHashFromUrl()
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      } else {
+        setBrowserHash(pending.value)
+      }
+      requestAnimationFrame(() => setPressedTabId(null))
+    })
   }, [pathname])
 
   const urlTab = tabFromUrl(pathname, hash)
   const activeTabId: MobileTabId | null =
     pressedTabId !== null ? pressedTabId : urlTab
+
+  const goHomeSection = (tabId: MobileTabId, fragment: string) => {
+    setPressedTabId(tabId)
+    if (pathname !== '/') {
+      pendingOnHomeRef.current = { kind: 'hash', value: fragment }
+      router.push('/')
+      return
+    }
+    const next = fragment.toLowerCase()
+    if (window.location.hash.toLowerCase() === next) {
+      scrollToHomeHash()
+      return
+    }
+    setBrowserHash(fragment)
+  }
+
+  const goHomeTop = () => {
+    setPressedTabId('home')
+    if (pathname !== '/') {
+      pendingOnHomeRef.current = { kind: 'top' }
+      router.push('/')
+      return
+    }
+    if (window.location.hash) stripHashFromUrl()
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   return (
     <nav
@@ -119,14 +180,60 @@ export function MobileTabBar() {
           const activeCls =
             'text-brand-600 dark:text-brand-400'
 
+          if (item.id === 'home') {
+            return (
+              <li key={item.id} className="flex min-w-0 flex-1 justify-center">
+                <Link
+                  href="/"
+                  scroll={false}
+                  onClick={(e: MouseEvent) => {
+                    e.preventDefault()
+                    goHomeTop()
+                  }}
+                  className={`${tabShell} focus-visible:ring-2 focus-visible:ring-brand-500/40 ${
+                    active ? activeCls : inactive
+                  }`}
+                  aria-current={active ? 'page' : undefined}
+                >
+                  <Icon
+                    className={`size-6 shrink-0 ${active ? activeCls : inactive}`}
+                  />
+                  <span className="truncate">{item.label}</span>
+                </Link>
+              </li>
+            )
+          }
+
+          if (item.hash) {
+            const fragment = item.hash
+            return (
+              <li key={item.id} className="flex min-w-0 flex-1 justify-center">
+                <Link
+                  href={item.href}
+                  scroll={false}
+                  onClick={(e: MouseEvent) => {
+                    e.preventDefault()
+                    goHomeSection(item.id as MobileTabId, fragment)
+                  }}
+                  className={`${tabShell} focus-visible:ring-2 focus-visible:ring-brand-500/40 ${
+                    active ? activeCls : inactive
+                  }`}
+                  aria-current={active ? 'page' : undefined}
+                >
+                  <Icon
+                    className={`size-6 shrink-0 ${active ? activeCls : inactive}`}
+                  />
+                  <span className="truncate">{item.label}</span>
+                </Link>
+              </li>
+            )
+          }
+
           return (
             <li key={item.id} className="flex min-w-0 flex-1 justify-center">
               <Link
                 href={item.href}
-                scroll={item.hash ? false : undefined}
-                onClick={() =>
-                  setPressedTabId(item.id as MobileTabId)
-                }
+                onClick={() => setPressedTabId(item.id as MobileTabId)}
                 className={`${tabShell} focus-visible:ring-2 focus-visible:ring-brand-500/40 ${
                   active ? activeCls : inactive
                 }`}

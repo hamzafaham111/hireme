@@ -25,8 +25,8 @@ export function HeroSection() {
           Deliveries, shopping, documents, and everyday errands—tell us in one
           message and {siteName} will take care of it. No apps, no forms.
         </p>
-        <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
-          <WhatsAppButton className="px-8 py-3.5 text-base">
+        <div className="mt-10 flex flex-row justify-start items-center gap-4 sm:flex-row sm:items-center">
+          <WhatsAppButton className="px-3 py-3.5 text-base">
             Book on WhatsApp
           </WhatsAppButton>
           <a

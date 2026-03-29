@@ -355,7 +355,6 @@ export function ServicesSection() {
 
         <ul
           className="mt-10 grid grid-cols-2 gap-3 sm:mt-14 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4"
-          aria-label="Service categories"
         >
           {services.map(({ title, tagline, Icon }) => (
             <li key={title} className="min-w-0">

@@ -27,19 +27,19 @@ export function SiteFooter() {
               </p>
               <ul className="mt-3 space-y-2 text-slate-600 dark:text-slate-400">
                 <li>
-                  <a href="#services" className="hover:text-brand-600">
+                  <Link href="/#services" className="hover:text-brand-600">
                     Services
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#how-it-works" className="hover:text-brand-600">
+                  <Link href="/#how-it-works" className="hover:text-brand-600">
                     How it works
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#reviews" className="hover:text-brand-600">
+                  <Link href="/#reviews" className="hover:text-brand-600">
                     Reviews
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -49,14 +49,14 @@ export function SiteFooter() {
               </p>
               <ul className="mt-3 space-y-2 text-slate-600 dark:text-slate-400">
                 <li>
-                  <a href="#partners" className="hover:text-brand-600">
+                  <Link href="/#partners" className="hover:text-brand-600">
                     Partners
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#faq" className="hover:text-brand-600">
+                  <Link href="/#faq" className="hover:text-brand-600">
                     FAQ
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

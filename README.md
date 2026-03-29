@@ -58,3 +58,6 @@ npm run dev --workspace=@hire-me/web
 ## Deploying
 
 Point your host at the app directory (e.g. Vercel project root `apps/web`, static or Node hosting for `apps/dashboard` after `npm run build` in that workspace). Add a real process under `apps/api` when you implement a backend.
+
+
+supabase password: Swabitopi@686

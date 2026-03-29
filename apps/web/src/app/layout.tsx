@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
+import { HomeHashScroll } from '@/components/HomeHashScroll'
 import { SiteHeader } from '@/components/SiteHeader'
 import { SiteFooter } from '@/components/SiteFooter'
 import { siteName, siteTagline } from '@/lib/site'
@@ -43,6 +44,7 @@ export default function RootLayout({
         className={`${inter.variable} ${display.variable} min-h-screen font-sans`}
       >
         <SiteHeader />
+        <HomeHashScroll />
         <main>{children}</main>
         <SiteFooter />
       </body>

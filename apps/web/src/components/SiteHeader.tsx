@@ -170,7 +170,7 @@ export function SiteHeader() {
           <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             <button
               type="button"
-              className="-ml-1 inline-flex rounded-lg p-2 text-slate-700 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 md:hidden dark:text-slate-200 dark:hover:bg-slate-800"
+              className="-ml-1 inline-flex rounded-lg text-slate-700 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 md:hidden dark:text-slate-200 dark:hover:bg-slate-800"
               aria-expanded={menuOpen}
               aria-controls={drawerId}
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}

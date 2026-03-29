@@ -1,0 +1,26 @@
+{
+  "name": "hire-me-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Hire Me — internal dashboard, public web, shared packages, and future API",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@hire-me/dashboard",
+    "dev:dashboard": "npm run dev --workspace=@hire-me/dashboard",
+    "dev:web": "npm run dev --workspace=@hire-me/web",
+    "dev:api": "npm run dev --prefix apps/api",
+    "build:api": "npm run build --prefix apps/api",
+    "build": "npm run build --workspaces --if-present",
+    "build:dashboard": "npm run build --workspace=@hire-me/dashboard",
+    "build:web": "npm run build --workspace=@hire-me/web",
+    "lint": "npm run lint --workspaces --if-present",
+    "lint:dashboard": "npm run lint --workspace=@hire-me/dashboard",
+    "lint:web": "npm run lint --workspace=@hire-me/web"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,38 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+
+# Local env (never commit secrets)
+.env
+apps/api/.env
+
+dist
+dist-ssr
+.next
+out
+*.local
+
+# Blog uploads (API stores files here locally)
+apps/api/uploads/*
+!apps/api/uploads/.gitkeep
+
+# Turbo (optional, if you add Turborepo later)
+.turbo
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

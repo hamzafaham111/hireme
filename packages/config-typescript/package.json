@@ -1,0 +1,6 @@
+{
+  "name": "@hire-me/config-typescript",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Shared TypeScript base config — extend from apps via \"extends\""
+}

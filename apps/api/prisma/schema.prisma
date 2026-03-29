@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DashboardRole {
+  superadmin
+  admin
+  agent
+  content_editor
+}
+
+enum UserStatus {
+  active
+  invited
+}
+
+// Stored as Prisma enums; map to dashboard strings (e.g. not-active) in API layer.
+enum WorkerStatus {
+  active
+  not_active
+  on_hold
+  canceled
+}
+
+enum JobStatus {
+  pending
+  in_progress
+  completed
+  cancelled
+}
+
+enum BlogPostStatus {
+  draft
+  published
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  passwordHash String        @map("password_hash")
+  name         String
+  role         DashboardRole
+  status       UserStatus
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  blogPosts    BlogPost[]
+
+  @@map("users")
+}
+
+model Worker {
+  id               String       @id @default(uuid())
+  workerId         String       @unique @map("worker_id")
+  name             String
+  phone            String
+  location         String
+  service          String
+  status           WorkerStatus
+  internalRating   Float        @map("internal_rating")
+  customerRating   Float        @map("customer_rating")
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  @@map("workers")
+}
+
+model Job {
+  id              String    @id @default(uuid())
+  jobId           String    @unique @map("job_id")
+  summary         String
+  service         String
+  area            String
+  status          JobStatus
+  assignedWorker  String    @map("assigned_worker")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@map("jobs")
+}
+
+model BlogPost {
+  id           String           @id @default(uuid())
+  slug         String           @unique
+  title        String
+  excerpt      String
+  bodyMarkdown String           @map("body_markdown")
+  status       BlogPostStatus
+  authorId     String           @map("author_id")
+  authorName   String           @map("author_name")
+  publishedAt  DateTime?        @map("published_at")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+  author       User             @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([status])
+  @@map("blog_posts")
+}

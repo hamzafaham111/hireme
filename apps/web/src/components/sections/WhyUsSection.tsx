@@ -1,3 +1,6 @@
+import { SectionIntro } from '@/components/sections/SectionIntro'
+import { siteName } from '@/lib/site'
+
 const reasons = [
   {
     title: 'Human support',
@@ -27,17 +30,14 @@ const reasons = [
 
 export function WhyUsSection() {
   return (
-    <section className="py-20 sm:py-24">
+    <section className="border-b border-slate-200 py-14 dark:border-slate-800 sm:py-16">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-center font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
-          Why teams pick Hire Me
-        </h2>
-        <p className="mx-auto mt-4 max-w-2xl text-center text-lg text-slate-600 dark:text-slate-400">
-          We took the best of concierge-style services and stripped the friction:
-          one channel, clear updates, and operators who treat your time as
-          expensive.
-        </p>
-        <ul className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <SectionIntro
+          eyebrow="Why us"
+          title={`Why teams pick ${siteName}`}
+          description="We took the best of concierge-style services and stripped the friction: one channel, clear updates, and operators who treat your time as expensive."
+        />
+        <ul className="mt-10 grid gap-6 sm:mt-14 sm:grid-cols-2 lg:grid-cols-3">
           {reasons.map((item) => (
             <li
               key={item.title}

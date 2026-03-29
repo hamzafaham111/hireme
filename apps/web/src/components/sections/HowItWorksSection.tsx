@@ -1,25 +1,157 @@
+import type { FC, SVGProps } from 'react'
+import { SectionIntro } from '@/components/sections/SectionIntro'
+import { siteName } from '@/lib/site'
 import { WhatsAppButton } from '@/components/WhatsAppButton'
 
-const steps = [
+type IconProps = SVGProps<SVGSVGElement>
+
+/** Step icons — same stroke weight as service cards for a cohesive marketing story. */
+function IconDescribeErrand({ className, ...p }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...p}
+    >
+      <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7H8l-5 3v-3.3a8.5 8.5 0 01-1.7-9.2 8.38 8.38 0 013.8-.9" />
+      <path d="M15.5 3.5l.6 2.2 2.2.6-2.2.6-.6 2.2-.6-2.2-2.2-.6 2.2-.6z" />
+    </svg>
+  )
+}
+
+function IconConfirmScope({ className, ...p }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...p}
+    >
+      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+      <path d="M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+      <path d="m9 14 2 2 4-4" />
+    </svg>
+  )
+}
+
+function IconRunErrand({ className, ...p }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...p}
+    >
+      <path d="M14 18V6a2 2 0 00-2-2H4a2 2 0 00-2 2v11a1 1 0 001 1h2" />
+      <path d="M15 18H9" />
+      <path d="M19 18h2a1 1 0 001-1v-3.65a1 1 0 00-.22-.624l-3.48-4.35A1 1 0 0017.52 8H14" />
+      <circle cx="17" cy="18" r="2" />
+      <circle cx="7" cy="18" r="2" />
+    </svg>
+  )
+}
+
+function IconProofDone({ className, ...p }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...p}
+    >
+      <path d="M9 12l2 2 4-4" />
+      <circle cx="12" cy="12" r="9" />
+    </svg>
+  )
+}
+
+function StepArrow({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  )
+}
+
+/**
+ * Horizontal bridge between desktop step cards: gradient lines run slightly into each card
+ * so the flow reads as one path, not a tiny glyph floating in the flex gap.
+ * Middle segment matches parent `gap-4` (1rem); side segments bleed into adjacent cards.
+ */
+function StepConnector() {
+  return (
+    <div
+      className="pointer-events-none absolute left-[calc(100%-1.125rem)] top-1/2 z-10 flex h-10 w-[calc(1.125rem+1rem+1.125rem)] -translate-y-1/2 items-center"
+      aria-hidden
+    >
+      <div className="h-0.5 min-w-0 flex-1 rounded-full bg-gradient-to-r from-transparent via-brand-300/80 to-brand-500/90 dark:from-transparent dark:via-brand-500/50 dark:to-brand-400/80" />
+      <div className="mx-0.5 flex size-7 shrink-0 items-center justify-center rounded-full border border-brand-200/80 bg-white shadow-sm ring-2 ring-white dark:border-brand-500/40 dark:bg-slate-900 dark:ring-slate-950">
+        <StepArrow className="size-3.5 text-brand-600 dark:text-brand-400" />
+      </div>
+      <div className="h-0.5 min-w-0 flex-1 rounded-full bg-gradient-to-r from-violet-500/90 via-violet-300/75 to-transparent dark:from-brand-400/80 dark:via-brand-500/45 dark:to-transparent" />
+    </div>
+  )
+}
+
+const steps: {
+  step: string
+  title: string
+  body: string
+  Icon: FC<IconProps>
+}[] = [
   {
-    step: '01',
-    title: 'Message us on WhatsApp',
-    body: 'One thread. No downloads. Say what you need.',
+    step: '1',
+    title: 'Message your errand',
+    body: `Delivery, shopping, pharmacy, documents, queues, or something custom—describe it once in WhatsApp. No app or forms.`,
+    Icon: IconDescribeErrand,
   },
   {
-    step: '02',
-    title: 'We confirm the details',
-    body: 'Pickup, drop-off, timing, and price. You approve; we assign a runner.',
+    step: '2',
+    title: 'We confirm scope & price',
+    body: `Pickup and drop-off, timing, and a clear quote. You approve; we assign someone to run it.`,
+    Icon: IconConfirmScope,
   },
   {
-    step: '03',
-    title: 'We execute',
-    body: 'Photos, live updates, and proactive pings if anything changes.',
+    step: '3',
+    title: 'We execute & update you',
+    body: `Photos, ETAs, and quick pings if anything changes—all in the same chat, whatever the job.`,
+    Icon: IconRunErrand,
   },
   {
-    step: '04',
-    title: 'You get time back',
-    body: 'Task closed with proof of delivery. Book again the same way.',
+    step: '4',
+    title: 'Closed with proof',
+    body: `Task signed off in-thread. Book your next parcel, store run, or errand the same way.`,
+    Icon: IconProofDone,
   },
 ]
 
@@ -27,38 +159,84 @@ export function HowItWorksSection() {
   return (
     <section
       id="how-it-works"
-      className="scroll-mt-20 border-y border-slate-200 bg-slate-100/80 py-20 dark:border-slate-800 dark:bg-slate-900/50 sm:py-24"
+      className="relative scroll-mt-20 overflow-hidden border-b border-slate-200 bg-white py-14 sm:py-20 dark:border-slate-800 dark:bg-slate-950"
     >
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-xl">
-            <h2 className="font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
-              How Hire Me works
-            </h2>
-            <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">
-              The whole journey stays in WhatsApp: fast to start, easy to
-              repeat, human when you need help.
-            </p>
+      <div
+        className="pointer-events-none absolute inset-0 bg-[length:40px_40px] bg-grid-slate opacity-40 dark:opacity-25"
+        aria-hidden
+      />
+      <div className="pointer-events-none absolute -right-24 top-0 size-72 rounded-full bg-violet-500/10 blur-3xl dark:bg-violet-500/15" />
+      <div className="pointer-events-none absolute -left-24 bottom-0 size-72 rounded-full bg-brand-500/10 blur-3xl dark:bg-brand-500/15" />
+
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <SectionIntro
+          eyebrow="From message to done"
+          title={`How ${siteName} works`}
+          description="The same simple flow for every service above—errands, deliveries, and on-the-ground help stay in one WhatsApp thread start to finish."
+        >
+          <div className="mt-6">
+            <WhatsAppButton className="shadow-md">Book on WhatsApp</WhatsAppButton>
           </div>
-          <WhatsAppButton className="self-start lg:self-auto">
-            Open WhatsApp
-          </WhatsAppButton>
-        </div>
-        <ol className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {steps.map((s) => (
-            <li
-              key={s.step}
-              className="relative rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-950"
-            >
-              <span className="font-display text-3xl font-bold text-brand-200 dark:text-brand-900">
-                {s.step}
-              </span>
-              <h3 className="mt-2 font-semibold text-slate-900 dark:text-white">
-                {s.title}
-              </h3>
-              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                {s.body}
-              </p>
+        </SectionIntro>
+
+        {/* Mobile / tablet: stacked timeline */}
+        <ol
+          className="relative mt-12 space-y-0 sm:mt-16 lg:hidden"
+          aria-label="Steps to book with Hire Me"
+        >
+          <div
+            className="absolute left-[1.35rem] top-8 bottom-8 w-px bg-gradient-to-b from-brand-400/60 via-violet-400/50 to-brand-400/60 dark:from-brand-500/40 dark:via-violet-500/35 dark:to-brand-500/40"
+            aria-hidden
+          />
+          {steps.map(({ step, title, body, Icon }) => (
+            <li key={step} className="relative flex gap-5 pb-10 last:pb-0">
+              <div className="relative z-10 flex shrink-0 flex-col items-center">
+                <div className="flex size-11 items-center justify-center rounded-2xl border border-brand-200/80 bg-white shadow-sm ring-4 ring-white dark:border-brand-500/30 dark:bg-slate-900 dark:ring-slate-950">
+                  <Icon className="size-5 text-brand-600 dark:text-brand-400" />
+                </div>
+              </div>
+              <div className="min-w-0 flex-1 pt-0.5">
+                <span className="text-xs font-bold tabular-nums text-brand-600 dark:text-brand-400">
+                  Step {step}
+                </span>
+                <h3 className="mt-1 font-display text-lg font-semibold text-slate-900 dark:text-white">
+                  {title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                  {body}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        {/* Desktop: horizontal journey with arrows */}
+        <ol
+          className="relative mt-14 hidden gap-4 lg:mt-16 lg:flex lg:items-stretch"
+          aria-label="Steps to book with Hire Me"
+        >
+          {steps.map(({ step, title, body, Icon }, i) => (
+            <li key={step} className="relative flex min-w-0 flex-1 flex-col">
+              <div className="flex h-full flex-col rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white to-slate-50/80 p-6 shadow-sm ring-1 ring-slate-900/[0.04] transition hover:border-brand-200/80 hover:shadow-md dark:border-slate-700/80 dark:from-slate-900/80 dark:to-slate-950/80 dark:ring-white/[0.06] dark:hover:border-brand-500/30">
+                <div className="flex items-start justify-between gap-3">
+                  <div
+                    className="flex size-12 items-center justify-center rounded-xl bg-brand-500/[0.12] text-brand-600 dark:bg-brand-400/15 dark:text-brand-300"
+                    aria-hidden
+                  >
+                    <Icon className="size-6" />
+                  </div>
+                  <span className="font-display text-2xl font-bold tabular-nums text-brand-200 dark:text-brand-900/80">
+                    {step}
+                  </span>
+                </div>
+                <h3 className="mt-5 font-display text-base font-semibold leading-snug text-slate-900 dark:text-white">
+                  {title}
+                </h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                  {body}
+                </p>
+              </div>
+              {i < steps.length - 1 ? <StepConnector /> : null}
             </li>
           ))}
         </ol>

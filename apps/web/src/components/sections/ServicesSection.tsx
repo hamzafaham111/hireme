@@ -1,4 +1,5 @@
 import type { FC, SVGProps } from 'react'
+import { SectionIntro } from '@/components/sections/SectionIntro'
 
 type IconProps = SVGProps<SVGSVGElement>
 
@@ -346,19 +347,11 @@ export function ServicesSection() {
         aria-hidden
       />
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        {/* Left-aligned block to match HeroSection */}
-        <div className="max-w-2xl">
-          <p className="inline-flex rounded-full border border-brand-300/90 bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-slate-900 dark:border-brand-400/60 dark:bg-brand-900 dark:text-white">
-            What we do
-          </p>
-          <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
-            Services
-          </h2>
-          <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-            Pick what fits your errand, then message us on WhatsApp—updates stay
-            in one chat.
-          </p>
-        </div>
+        <SectionIntro
+          eyebrow="What we do"
+          title="Services"
+          description="Pick what fits your errand, then message us on WhatsApp—updates stay in one chat."
+        />
 
         <ul
           className="mt-10 grid grid-cols-2 gap-3 sm:mt-14 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4"

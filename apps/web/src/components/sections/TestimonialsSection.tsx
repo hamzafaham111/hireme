@@ -1,3 +1,5 @@
+import { SectionIntro } from '@/components/sections/SectionIntro'
+
 const reviews = [
   {
     quote:
@@ -44,24 +46,19 @@ export function TestimonialsSection() {
   return (
     <section
       id="reviews"
-      className="scroll-mt-20 border-t border-slate-200 bg-gradient-to-b from-brand-50/50 to-transparent py-20 dark:border-slate-800 dark:from-brand-950/20 sm:py-24"
+      className="scroll-mt-20 border-t border-slate-200 bg-gradient-to-b from-brand-50/50 to-transparent py-14 dark:border-slate-800 dark:from-brand-950/20 sm:py-16"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
-          <div>
-            <h2 className="font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
-              What customers say
-            </h2>
-            <p className="mt-4 max-w-xl text-lg text-slate-600 dark:text-slate-400">
-              Real feedback from people who wanted speed without the hassle of
-              another app subscription.
-            </p>
-          </div>
-          <p className="text-sm font-semibold text-brand-700 dark:text-brand-300">
+        <SectionIntro
+          eyebrow="Reviews"
+          title="What customers say"
+          description="Real feedback from people who wanted speed without the hassle of another app subscription."
+        >
+          <p className="mt-4 text-sm font-semibold text-brand-700 dark:text-brand-300">
             ★ 4.9 avg. · Google & WhatsApp
           </p>
-        </div>
-        <ul className="mt-14 grid gap-6 md:grid-cols-3">
+        </SectionIntro>
+        <ul className="mt-10 grid gap-6 sm:mt-14 md:grid-cols-3">
           {reviews.map((r) => (
             <li
               key={r.name}

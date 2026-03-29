@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { SectionIntro } from '@/components/sections/SectionIntro'
 
 const faqs = [
   {
@@ -33,15 +34,14 @@ export function FaqSection() {
   const [open, setOpen] = useState<number | null>(0)
 
   return (
-    <section id="faq" className="scroll-mt-20 py-20 sm:py-24">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-center font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
-          Frequently asked questions
-        </h2>
-        <p className="mx-auto mt-4 max-w-xl text-center text-slate-600 dark:text-slate-400">
-          Straight answers—the same tone you get when you message the team.
-        </p>
-        <ul className="mt-12 space-y-3">
+    <section id="faq" className="scroll-mt-20 py-14 sm:py-16">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <SectionIntro
+          eyebrow="FAQ"
+          title="Frequently asked questions"
+          description="Straight answers—the same tone you get when you message the team."
+        />
+        <ul className="mt-10 max-w-3xl space-y-3 sm:mt-14">
           {faqs.map((item, i) => {
             const isOpen = open === i
             return (

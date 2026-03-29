@@ -14,9 +14,9 @@ export default function HomePage() {
     <>
       <HeroSection />
       <ServicesSection />
+      <HowItWorksSection />
       <StatsSection />
       <WhatsAppInfoSection />
-      <HowItWorksSection />
       <PartnersSection />
       <TestimonialsSection />
       <WhyUsSection />

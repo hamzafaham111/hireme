@@ -22,70 +22,71 @@ export type ServiceDefinition = {
   Icon: FC<ServiceIconProps>
 }
 
+/** Taglines kept short so two cards fit comfortably in the mobile carousel. */
 export const SERVICES: ServiceDefinition[] = [
   {
     title: 'Express delivery',
-    tagline: 'Parcels and documents—picked up and dropped off the same day.',
+    tagline: 'Same-day parcels and documents, door to door.',
     Icon: IconExpress,
   },
   {
     title: 'Personal shopping',
-    tagline: 'We buy from stores you choose and deliver to your door.',
+    tagline: 'We shop the stores you pick; we deliver.',
     Icon: IconShoppingBag,
   },
   {
     title: 'Groceries & takeout',
-    tagline: 'Supermarkets, cafés, and ready-to-eat pickup runs.',
+    tagline: 'Markets, cafés, and meal pickup runs.',
     Icon: IconGrocery,
   },
   {
     title: 'Pharmacy runs',
-    tagline: 'Prescriptions and health essentials, handled discreetly.',
+    tagline: 'Prescriptions and essentials, discreet.',
     Icon: IconPharmacy,
   },
   {
     title: 'Banking & paperwork',
-    tagline: 'Cheques, deposits, signatures, and document handovers.',
+    tagline: 'Cheques, deposits, and document handovers.',
     Icon: IconBankPaper,
   },
   {
     title: 'Gifts & luxe shopping',
-    tagline: 'Flowers, surprises, and boutique purchases with care.',
+    tagline: 'Flowers, gifts, and boutique buys.',
     Icon: IconGift,
   },
   {
     title: 'Furniture & bulky pickup',
-    tagline: 'Large-store, IKEA-style, and heavy items to your home.',
+    tagline: 'Big-box and heavy items to your home.',
     Icon: IconBulky,
   },
   {
     title: 'Car & motor errands',
-    tagline: 'Testing centres, renewals, and agency visits.',
+    tagline: 'Testing, renewals, and agency visits.',
     Icon: IconCar,
   },
   {
     title: 'Queue & wait service',
-    tagline: 'We wait in line at banks, counters, and busy venues.',
+    tagline: 'We wait at banks, counters, and busy lines.',
     Icon: IconQueue,
   },
   {
     title: 'Pet taxi & vet trips',
-    tagline: 'Safe rides to the vet and trusted on-the-ground help.',
+    tagline: 'Safe rides and help for vet visits.',
     Icon: IconPaw,
   },
   {
     title: 'Home & key handovers',
-    tagline: 'Check-ins, access handovers, and errands at your place.',
+    tagline: 'Check-ins, keys, and errands at your place.',
     Icon: IconHomeKey,
   },
   {
     title: 'Office & business',
-    tagline: 'Last-mile jobs, supplies, and admin for teams—one thread.',
+    tagline: 'Team errands and supplies—one WhatsApp thread.',
     Icon: IconBriefcase,
   },
   {
     title: 'Anything legal',
-    tagline: 'Describe it on WhatsApp; we quote clearly and get it done.',
+    tagline: 'Describe it; we quote clearly and run it.',
     Icon: IconMessageSpark,
   },
 ]

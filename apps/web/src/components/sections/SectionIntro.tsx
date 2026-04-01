@@ -9,6 +9,8 @@ export type SectionIntroProps = {
   className?: string
   /** Hide eyebrow + description below `md` (title only on small screens). */
   hideEyebrowAndDescriptionBelowMd?: boolean
+  /** Inline with the title row, end-aligned (e.g. “See all” on mobile). */
+  titleTrailing?: ReactNode
 }
 
 /**
@@ -22,8 +24,13 @@ export function SectionIntro({
   children,
   className = '',
   hideEyebrowAndDescriptionBelowMd = false,
+  titleTrailing,
 }: SectionIntroProps) {
   const compact = hideEyebrowAndDescriptionBelowMd
+
+  const titleRowMargin = compact ? 'mt-0 md:mt-4' : 'mt-4'
+  const titleClass =
+    'font-display text-xl md:font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white'
 
   return (
     <div className={`max-w-2xl text-left ${className}`.trim()}>
@@ -34,13 +41,16 @@ export function SectionIntro({
       >
         {eyebrow}
       </p>
-      <h2
-        className={`font-display text-xl md:font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white ${
-          compact ? 'mt-0 md:mt-4' : 'mt-4'
-        }`}
-      >
-        {title}
-      </h2>
+      {titleTrailing != null ? (
+        <div
+          className={`flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 ${titleRowMargin}`}
+        >
+          <h2 className={`${titleClass} min-w-0 flex-1`}>{title}</h2>
+          <div className="shrink-0">{titleTrailing}</div>
+        </div>
+      ) : (
+        <h2 className={`${titleClass} ${titleRowMargin}`}>{title}</h2>
+      )}
       <p
         className={`mt-4 text-lg text-slate-600 dark:text-slate-300 ${
           compact ? 'hidden md:block' : ''

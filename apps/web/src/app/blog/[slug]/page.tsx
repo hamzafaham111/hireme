@@ -5,6 +5,7 @@ import { BlogMarkdown } from '@/components/BlogMarkdown'
 import { siteName } from '@/lib/site'
 import { fetchPostBySlug, fetchPublishedPosts, siteOrigin } from '@/lib/blogPublic'
 import { formatLongDate } from '@/lib/format-date'
+import { sectionHeadingClass } from '@/lib/typography'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -49,9 +50,7 @@ export default async function BlogPostPage({ params }: Props) {
         </Link>
       </p>
       <header className="mt-6">
-        <h1 className="font-display text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-          {post.title}
-        </h1>
+        <h1 className={sectionHeadingClass}>{post.title}</h1>
         <p className="mt-3 text-lg text-slate-600 dark:text-slate-400">{post.excerpt}</p>
         <p className="mt-4 text-sm text-slate-500">
           {post.publishedAt ? formatLongDate(post.publishedAt) : null}

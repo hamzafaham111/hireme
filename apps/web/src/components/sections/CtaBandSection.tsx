@@ -1,4 +1,5 @@
 import { WhatsAppButton } from '@/components/WhatsAppButton'
+import { sectionHeadingClassOnDark } from '@/lib/typography'
 
 export function CtaBandSection() {
   return (
@@ -17,7 +18,7 @@ export function CtaBandSection() {
             <p className="inline-flex rounded-full border border-white/30 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">
               Get started
             </p>
-            <h2 className="mt-4 font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
+            <h2 className={`mt-4 ${sectionHeadingClassOnDark}`}>
               Ready when you are
             </h2>
             <p className="mt-4 max-w-xl text-lg text-brand-100">

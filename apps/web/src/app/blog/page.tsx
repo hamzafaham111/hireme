@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { fetchPublishedPosts, siteOrigin } from '@/lib/blogPublic'
 import { formatLongDate } from '@/lib/format-date'
 import { siteName } from '@/lib/site'
+import { sectionHeadingClass } from '@/lib/typography'
 
 export const metadata: Metadata = {
   title: 'Blog',
@@ -15,9 +16,7 @@ export default async function BlogIndexPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-      <h1 className="font-display text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-        Blog
-      </h1>
+      <h1 className={sectionHeadingClass}>Blog</h1>
       <p className="mt-2 text-slate-600 dark:text-slate-400">News and guides from our team.</p>
 
       {posts.length === 0 ? (
@@ -29,7 +28,7 @@ export default async function BlogIndexPage() {
           {posts.map((p) => (
             <li key={p.id}>
               <article>
-                <h2 className="font-display text-xl font-semibold text-slate-900 dark:text-white">
+                <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white sm:text-xl md:text-2xl">
                   <Link
                     href={`/blog/${p.slug}`}
                     className="text-brand-700 transition hover:text-brand-600 dark:text-brand-300 dark:hover:text-brand-200"

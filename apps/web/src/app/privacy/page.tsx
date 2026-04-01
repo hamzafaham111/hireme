@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { siteName } from '@/lib/site'
+import { sectionHeadingClass } from '@/lib/typography'
 
 export const metadata: Metadata = {
   title: 'Privacy',
@@ -15,9 +16,7 @@ export default function PrivacyPage() {
           ← Home
         </Link>
       </p>
-      <h1 className="mt-6 font-display text-3xl font-bold text-slate-900 dark:text-white">
-        Privacy
-      </h1>
+      <h1 className={`mt-6 ${sectionHeadingClass}`}>Privacy</h1>
       <p className="mt-6 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
         This is a placeholder page for the public marketing site. Replace with
         your real privacy policy before launch: what data you collect (e.g.

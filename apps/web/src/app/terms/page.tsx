@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { siteName } from '@/lib/site'
+import { sectionHeadingClass } from '@/lib/typography'
 
 export const metadata: Metadata = {
   title: 'Terms',
@@ -15,9 +16,7 @@ export default function TermsPage() {
           ← Home
         </Link>
       </p>
-      <h1 className="mt-6 font-display text-3xl font-bold text-slate-900 dark:text-white">
-        Terms of use
-      </h1>
+      <h1 className={`mt-6 ${sectionHeadingClass}`}>Terms of use</h1>
       <p className="mt-6 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
         Placeholder terms page. Add your jurisdiction-specific terms, liability
         limits, prohibited items, cancellation policy, and payment rules before

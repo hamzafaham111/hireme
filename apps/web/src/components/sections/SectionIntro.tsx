@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { sectionHeadingClass } from '@/lib/typography'
 
 export type SectionIntroProps = {
   eyebrow: string
@@ -29,8 +30,7 @@ export function SectionIntro({
   const compact = hideEyebrowAndDescriptionBelowMd
 
   const titleRowMargin = compact ? 'mt-0 md:mt-4' : 'mt-4'
-  const titleClass =
-    'font-display text-xl md:font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white'
+  const titleClass = sectionHeadingClass
 
   return (
     <div className={`max-w-2xl text-left ${className}`.trim()}>

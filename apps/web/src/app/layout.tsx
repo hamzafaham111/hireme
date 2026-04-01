@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
+import { AppSplashScreen } from '@/components/AppSplashScreen'
 import { HomeHashScroll } from '@/components/HomeHashScroll'
 import { MobileTabBar } from '@/components/MobileTabBar'
 import { SiteHeader } from '@/components/SiteHeader'
@@ -44,6 +45,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${display.variable} min-h-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] font-sans md:pb-0`}
       >
+        <AppSplashScreen />
         <SiteHeader />
         <HomeHashScroll />
         <main>{children}</main>

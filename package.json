@@ -11,6 +11,7 @@
     "dev": "npm run dev --workspace=@hire-me/dashboard",
     "dev:dashboard": "npm run dev --workspace=@hire-me/dashboard",
     "dev:web": "npm run dev --workspace=@hire-me/web",
+    "clean:web": "npm run clean --workspace=@hire-me/web",
     "dev:api": "npm run dev --prefix apps/api",
     "build:api": "npm run build --prefix apps/api",
     "build": "npm run build --workspaces --if-present",

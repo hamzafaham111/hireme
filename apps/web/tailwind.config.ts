@@ -2,6 +2,9 @@ import type { Config } from 'tailwindcss'
 import typography from '@tailwindcss/typography'
 
 const config: Config = {
+  // Default: `media` — `prefers-color-scheme: dark` activates `dark:*` utilities.
+  // Pair `dark:text-*` with `dark:bg-*` on the same surface (see SiteHeader, sections).
+  darkMode: 'media',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',

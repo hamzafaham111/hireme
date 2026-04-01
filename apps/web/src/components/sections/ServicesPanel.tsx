@@ -15,7 +15,7 @@ function ServiceCard({
 }: ServiceDefinition & { layout: LayoutMode }) {
   const carouselLi =
     layout === 'carousel'
-      ? 'max-md:shrink-0 max-md:snap-start max-md:basis-[calc((100%-1rem)/2.4)]'
+      ? 'max-md:shrink-0 max-md:snap-start max-md:basis-[calc((100%-1rem)/2.2)]'
       : ''
 
   return (

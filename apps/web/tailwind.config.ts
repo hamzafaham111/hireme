@@ -13,8 +13,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
-        display: ['var(--font-display)', 'var(--font-geist-sans)', 'system-ui'],
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'var(--font-sans)', 'system-ui'],
       },
       colors: {
         brand: {

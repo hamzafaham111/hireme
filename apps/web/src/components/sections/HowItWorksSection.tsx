@@ -68,7 +68,7 @@ export function HowItWorksSection() {
   return (
     <section
       id="how-it-works"
-      className="relative scroll-mt-[var(--site-sticky-header-offset)] overflow-hidden border-b border-slate-200 bg-white py-14 sm:py-20 dark:border-slate-800 dark:bg-slate-950"
+      className="relative scroll-mt-[var(--site-sticky-header-offset)] overflow-hidden border-b border-slate-200 bg-white py-8 dark:border-slate-800 dark:bg-slate-950"
     >
       <GridBackdrop className="opacity-40 dark:opacity-25" />
       <div className="pointer-events-none absolute -right-24 top-0 size-72 rounded-full bg-violet-500/10 blur-3xl dark:bg-violet-500/15" />

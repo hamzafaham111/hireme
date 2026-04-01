@@ -57,7 +57,7 @@ export function ServicesPanel() {
   const showCarousel = useCallback(() => setLayout('carousel'), [])
 
   const listCarousel =
-    'mt-2 flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth overscroll-x-contain pb-1 [-ms-overflow-style:none] [scrollbar-width:none] md:mt-10 md:grid md:snap-none md:grid-cols-3 md:gap-4 md:overflow-visible md:pb-0 sm:mt-14 lg:grid-cols-4 [&::-webkit-scrollbar]:hidden'
+    'mt-2 flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth overscroll-x-contain pb-1 [-ms-overflow-style:none] [scrollbar-width:none] md:mt-10 md:grid md:snap-none md:grid-cols-3 md:gap-4 md:overflow-visible md:pb-0 sm:mt-4 lg:grid-cols-4 [&::-webkit-scrollbar]:hidden'
 
   const listGrid =
     'mt-2 grid grid-cols-2 gap-3 md:mt-10 md:grid-cols-3 md:gap-4 sm:mt-14 lg:grid-cols-4'

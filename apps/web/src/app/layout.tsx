@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
-import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
+import { Manrope, Sora } from 'next/font/google'
 import './globals.css'
 import { AppSplashScreen } from '@/components/AppSplashScreen'
 import { HomeHashScroll } from '@/components/HomeHashScroll'
@@ -9,13 +9,16 @@ import { SiteHeader } from '@/components/SiteHeader'
 import { SiteFooter } from '@/components/SiteFooter'
 import { siteName, siteTagline } from '@/lib/site'
 
-const inter = Inter({
+/** Body / UI — geometric, readable at small sizes */
+const manrope = Manrope({
   subsets: ['latin'],
-  variable: '--font-geist-sans',
+  variable: '--font-sans',
   display: 'swap',
+  weight: ['400', '500', '600', '700'],
 })
 
-const display = Plus_Jakarta_Sans({
+/** Headings — slightly tech-forward display */
+const sora = Sora({
   subsets: ['latin'],
   variable: '--font-display',
   display: 'swap',
@@ -43,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${inter.variable} ${display.variable} min-h-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] font-sans md:pb-0`}
+        className={`${manrope.variable} ${sora.variable} min-h-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] font-sans md:pb-0`}
       >
         <AppSplashScreen />
         <SiteHeader />

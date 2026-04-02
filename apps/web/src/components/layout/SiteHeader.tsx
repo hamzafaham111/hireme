@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useId } from 'react'
 import { PRIMARY_NAV } from '@/lib/site-nav'
 import { siteName, siteServiceLocation } from '@/lib/site'
-import { WhatsAppButton } from '@/components/WhatsAppButton'
+import { WhatsAppButton } from '@/components/whatsapp'
 
 function SearchIcon({ className }: { className?: string }) {
   return (

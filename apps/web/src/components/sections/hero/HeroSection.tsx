@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { WhatsAppButton } from '@/components/WhatsAppButton'
-import { GridBackdrop } from '@/components/ui/GridBackdrop'
+import { GridBackdrop } from '@/components/ui/grid-backdrop'
+import { WhatsAppButton } from '@/components/whatsapp'
 import { siteName } from '@/lib/site'
 
 export function HeroSection() {

@@ -1,0 +1,1 @@
+export { WhatsAppInfoSection } from './WhatsAppInfoSection'

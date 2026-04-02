@@ -1,4 +1,4 @@
-import { SectionIntro } from '@/components/sections/SectionIntro'
+import { SectionIntro } from '@/components/sections/shared'
 import { siteName } from '@/lib/site'
 
 const reasons = [

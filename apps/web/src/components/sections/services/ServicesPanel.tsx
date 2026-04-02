@@ -1,9 +1,9 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import type { ServiceDefinition } from '@/components/sections/services/service-data'
-import { SERVICES } from '@/components/sections/services/service-data'
-import { SectionIntro } from '@/components/sections/SectionIntro'
+import { SectionIntro } from '@/components/sections/shared'
+import type { ServiceDefinition } from './service-data'
+import { SERVICES } from './service-data'
 
 type LayoutMode = 'carousel' | 'grid'
 

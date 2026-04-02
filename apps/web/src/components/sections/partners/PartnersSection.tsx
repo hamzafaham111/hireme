@@ -1,4 +1,4 @@
-import { SectionIntro } from '@/components/sections/SectionIntro'
+import { SectionIntro } from '@/components/sections/shared'
 
 /** Placeholder partners—swap for real logos when you have brand assets. */
 const partners = [

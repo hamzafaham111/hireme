@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { BlogMarkdown } from '@/components/BlogMarkdown'
+import { BlogMarkdown } from '@/components/blog'
 import { siteName } from '@/lib/site'
 import { fetchPostBySlug, fetchPublishedPosts, siteOrigin } from '@/lib/blogPublic'
 import { formatLongDate } from '@/lib/format-date'

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { FOOTER_LINK_GROUPS } from '@/lib/site-nav'
 import { siteName } from '@/lib/site'
-import { WhatsAppButton } from '@/components/WhatsAppButton'
+import { WhatsAppButton } from '@/components/whatsapp'
 
 const footerLinkClass = 'hover:text-brand-600 dark:hover:text-brand-400'
 

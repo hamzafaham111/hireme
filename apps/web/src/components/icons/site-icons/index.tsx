@@ -382,6 +382,49 @@ export function IconMessageSpark({ className, ...p }: SiteIconProps) {
   )
 }
 
+export function IconCleaning({ className, ...p }: SiteIconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...p}
+    >
+      <path d="M5 10h14l-1.2 9a2 2 0 01-2 1.8H8.2a2 2 0 01-2-1.8L5 10z" />
+      <path d="M5 10h14" />
+      <path d="M8 10V8a4 4 0 018 0v2" />
+      <circle cx="9" cy="16" r="1" fill="currentColor" stroke="none" />
+      <circle cx="12.5" cy="17" r="0.85" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="15.5" r="0.75" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
+
+export function IconCooking({ className, ...p }: SiteIconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...p}
+    >
+      <path d="M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z" />
+      <path d="M4 13c0-3 3.5-5 8-5s8 2 8 5" />
+      <path d="M9 5v2.5M12 4v3M15 5v2.5" />
+    </svg>
+  )
+}
+
 // ─── How it works ───────────────────────────────────────────────────────────
 // Same glyph as service “Anything legal” / WhatsApp tips — one component, multiple names.
 

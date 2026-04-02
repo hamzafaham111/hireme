@@ -5,8 +5,8 @@ import {
   IconMessageSpark,
   IconPhoto,
 } from '@/components/icons/site-icons'
-import { SectionIntro } from '@/components/sections/SectionIntro'
-import { WhatsAppButton } from '@/components/WhatsAppButton'
+import { SectionIntro } from '@/components/sections/shared'
+import { WhatsAppButton } from '@/components/whatsapp'
 
 const quickTips: {
   title: string

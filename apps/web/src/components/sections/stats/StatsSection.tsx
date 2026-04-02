@@ -6,8 +6,8 @@ import {
   IconStatTasks,
   IconStatUsers,
 } from '@/components/icons/site-icons'
-import { SectionIntro } from '@/components/sections/SectionIntro'
-import { GridBackdrop } from '@/components/ui/GridBackdrop'
+import { SectionIntro } from '@/components/sections/shared'
+import { GridBackdrop } from '@/components/ui/grid-backdrop'
 
 const stats: {
   value: string

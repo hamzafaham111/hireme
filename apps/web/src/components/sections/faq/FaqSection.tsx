@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { SectionIntro } from '@/components/sections/SectionIntro'
+import { SectionIntro } from '@/components/sections/shared'
 
 const faqs = [
   {

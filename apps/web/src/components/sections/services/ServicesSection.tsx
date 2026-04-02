@@ -1,5 +1,5 @@
-import { GridBackdrop } from '@/components/ui/GridBackdrop'
-import { ServicesPanel } from '@/components/sections/ServicesPanel'
+import { GridBackdrop } from '@/components/ui/grid-backdrop'
+import { ServicesPanel } from './ServicesPanel'
 
 export function ServicesSection() {
   return (

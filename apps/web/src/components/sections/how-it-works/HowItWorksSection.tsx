@@ -7,10 +7,10 @@ import {
   IconRunErrand,
   IconStepArrow,
 } from '@/components/icons/site-icons'
-import { SectionIntro } from '@/components/sections/SectionIntro'
-import { GridBackdrop } from '@/components/ui/GridBackdrop'
+import { SectionIntro } from '@/components/sections/shared'
+import { GridBackdrop } from '@/components/ui/grid-backdrop'
 import { siteName } from '@/lib/site'
-import { WhatsAppButton } from '@/components/WhatsAppButton'
+import { WhatsAppButton } from '@/components/whatsapp'
 
 /**
  * Horizontal bridge between desktop step cards: gradient lines run slightly into each card

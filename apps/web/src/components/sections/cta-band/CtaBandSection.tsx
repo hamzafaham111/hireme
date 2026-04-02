@@ -1,4 +1,4 @@
-import { WhatsAppButton } from '@/components/WhatsAppButton'
+import { WhatsAppButton } from '@/components/whatsapp'
 import { sectionHeadingClassOnDark } from '@/lib/typography'
 
 export function CtaBandSection() {

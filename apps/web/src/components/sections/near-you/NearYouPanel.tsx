@@ -8,7 +8,7 @@ import { POPULAR_NEAR_YOU_ITEMS } from './near-you-data'
 
 type LayoutMode = 'carousel' | 'grid'
 
-function NearYouCard({ id, title, imageSrc, imageAlt, layout }: PopularNearYouItem & { layout: LayoutMode }) {
+function NearYouCard({ id, title, tagline, imageSrc, imageAlt, layout }: PopularNearYouItem & { layout: LayoutMode }) {
   const carouselLi =
     layout === 'carousel'
       ? 'max-md:shrink-0 max-md:snap-start max-md:basis-[calc((100%-1rem)/2.2)]'
@@ -31,13 +31,16 @@ function NearYouCard({ id, title, imageSrc, imageAlt, layout }: PopularNearYouIt
             sizes="(max-width: 768px) 45vw, (max-width: 1024px) 33vw, 25vw"
           />
         </div>
-        <div className="flex flex-1 items-center p-3 sm:p-3.5">
+        <div className="flex flex-1 flex-col justify-center gap-0 p-3 sm:p-3.5 md:gap-1 md:py-4">
           <h3
             id={headingId}
             className="font-display text-[13px] font-semibold leading-snug text-slate-900 sm:text-base dark:text-white"
           >
             {title}
           </h3>
+          <p className="hidden text-left text-xs leading-relaxed text-slate-600 md:block dark:text-slate-400">
+            {tagline}
+          </p>
         </div>
       </article>
     </li>

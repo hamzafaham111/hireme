@@ -9,6 +9,7 @@ export type PrimaryNavItem = { readonly href: string; readonly label: string }
 export const PRIMARY_NAV: readonly PrimaryNavItem[] = [
   { href: '/blog', label: 'Blog' },
   { href: '/#services', label: 'Services' },
+  { href: '/#near-you', label: 'Popular near you' },
   { href: '/#how-it-works', label: 'How it works' },
   { href: '/#partners', label: 'Partners' },
   { href: '/#reviews', label: 'Reviews' },
@@ -43,6 +44,7 @@ export const FOOTER_LINK_GROUPS: {
     title: 'Explore',
     links: [
       { href: '/#services', label: 'Services' },
+      { href: '/#near-you', label: 'Popular near you' },
       { href: '/#how-it-works', label: 'How it works' },
       { href: '/blog', label: 'Blog' },
       { href: '/#reviews', label: 'Reviews' },

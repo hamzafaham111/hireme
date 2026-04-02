@@ -9,11 +9,17 @@ import {
   IconGift,
   IconGrocery,
   IconHomeKey,
+  IconRealEstate,
+  IconCleaning,
+  IconCooking,
   IconMessageSpark,
   IconPaw,
   IconPharmacy,
   IconQueue,
   IconShoppingBag,
+  IconTourGuide,
+  IconTranslate,
+  IconTutor,
 } from '@/components/icons/site-icons'
 
 export type ServiceDefinition = {
@@ -38,6 +44,11 @@ export const SERVICES: ServiceDefinition[] = [
     title: 'Groceries & takeout',
     tagline: 'Markets, cafés, and meal pickup runs.',
     Icon: IconGrocery,
+  },
+  {
+    title: 'Cooking & meal prep',
+    tagline: 'Help in the kitchen or ready-to-heat drop-offs.',
+    Icon: IconCooking,
   },
   {
     title: 'Pharmacy runs',
@@ -78,6 +89,31 @@ export const SERVICES: ServiceDefinition[] = [
     title: 'Home & key handovers',
     tagline: 'Check-ins, keys, and errands at your place.',
     Icon: IconHomeKey,
+  },
+  {
+    title: 'Real estate agents',
+    tagline: 'Showings, lockboxes, staging drops, and buyer errands.',
+    Icon: IconRealEstate,
+  },
+  {
+    title: 'Cleaning',
+    tagline: 'Home tidy-ups, deep cleans, and move-out help.',
+    Icon: IconCleaning,
+  },
+  {
+    title: 'Tour guides',
+    tagline: 'City walks, sites, museums, and private day trips.',
+    Icon: IconTourGuide,
+  },
+  {
+    title: 'Translators',
+    tagline: 'On-site interpretation and document language help.',
+    Icon: IconTranslate,
+  },
+  {
+    title: 'Tutors',
+    tagline: 'Homework help, skills coaching, and exam prep sessions.',
+    Icon: IconTutor,
   },
   {
     title: 'Office & business',

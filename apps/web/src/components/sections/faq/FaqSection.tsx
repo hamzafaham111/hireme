@@ -6,7 +6,7 @@ import { SectionIntro } from '@/components/sections/shared'
 const faqs = [
   {
     q: 'What can I book through Hire Me?',
-    a: 'Most everyday errands: deliveries, shopping, documents, gifts, vehicle-related runs, pet support, and corporate tasks. If it is legal and doable, ask on WhatsApp and we will confirm.',
+    a: 'Most everyday errands: deliveries, shopping, cleaning, cooking help, real estate agent support, tour guides, translators, tutors, documents, gifts, vehicle-related runs, pet support, and corporate tasks. If it is legal and doable, ask on WhatsApp and we will confirm.',
   },
   {
     q: 'How do I book?',

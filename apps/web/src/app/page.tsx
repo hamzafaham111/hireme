@@ -2,6 +2,7 @@ import { CtaBandSection } from '@/components/sections/cta-band'
 import { FaqSection } from '@/components/sections/faq'
 import { HeroSection } from '@/components/sections/hero'
 import { HowItWorksSection } from '@/components/sections/how-it-works'
+import { NearYouSection } from '@/components/sections/near-you'
 import { PartnersSection } from '@/components/sections/partners'
 import { ServicesSection } from '@/components/sections/services'
 import { StatsSection } from '@/components/sections/stats'
@@ -14,6 +15,7 @@ export default function HomePage() {
     <>
       <HeroSection />
       <ServicesSection />
+      <NearYouSection />
       <HowItWorksSection />
       <StatsSection />
       <WhatsAppInfoSection />

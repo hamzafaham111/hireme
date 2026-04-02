@@ -8,6 +8,15 @@ const monorepoRoot = path.join(__dirname, '../..')
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
+    ],
+  },
   /** Single install at monorepo root — tracing must include hoisted deps. */
   outputFileTracingRoot: monorepoRoot,
   /**

@@ -180,6 +180,44 @@ export function IconGrocery({ className, ...p }: SiteIconProps) {
   )
 }
 
+export function IconCooking({ className, ...p }: SiteIconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...p}
+    >
+      <path d="M6 13.87A4 4 0 017.41 6a5.11 5.11 0 011.05-1.54 5 5 0 017.08 0A5.11 5.11 0 0116.59 6 4 4 0 0118 13.87V21H6z" />
+      <path d="M6 17h12" />
+    </svg>
+  )
+}
+
+export function IconCleaning({ className, ...p }: SiteIconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...p}
+    >
+      <path d="m12 3-1.912 5.813a2 2 0 01-1.275 1.275L3 12l5.813 1.912a2 2 0 011.275 1.275L12 21l1.912-5.813a2 2 0 011.275-1.275L21 12l-5.813-1.912a2 2 0 01-1.275-1.275L12 3Z" />
+      <path d="M5 3v4M3 5h4M19 17v4M17 19h4" />
+    </svg>
+  )
+}
+
 export function IconBankPaper({ className, ...p }: SiteIconProps) {
   return (
     <svg
@@ -324,6 +362,93 @@ export function IconHomeKey({ className, ...p }: SiteIconProps) {
   )
 }
 
+/** Property / brokerage — showings, keys, and on-site errands for agents. */
+export function IconRealEstate({ className, ...p }: SiteIconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...p}
+    >
+      <rect x="4" y="2" width="16" height="20" rx="2" />
+      <path d="M9 22v-5h6v5" />
+      <rect x="6" y="5" width="4" height="3" rx="0.5" />
+      <rect x="14" y="5" width="4" height="3" rx="0.5" />
+      <rect x="6" y="10" width="4" height="3" rx="0.5" />
+      <rect x="14" y="10" width="4" height="3" rx="0.5" />
+    </svg>
+  )
+}
+
+/** City tours, sites, and escorted outings. */
+export function IconTourGuide({ className, ...p }: SiteIconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...p}
+    >
+      <path d="M12 21c-3-3.5-6-6.7-6-10a6 6 0 1112 0c0 3.3-3 6.5-6 10z" />
+      <circle cx="12" cy="11" r="2.5" />
+    </svg>
+  )
+}
+
+/** Interpretation and language support. */
+export function IconTranslate({ className, ...p }: SiteIconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...p}
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3a15 15 0 010 18" />
+      <path d="M4.5 7h15M4.5 17h15" />
+    </svg>
+  )
+}
+
+/** Tutoring and learning support. */
+export function IconTutor({ className, ...p }: SiteIconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...p}
+    >
+      <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+      <path d="M8 7h8M8 11h5M8 15h6" />
+    </svg>
+  )
+}
+
 export function IconBriefcase({ className, ...p }: SiteIconProps) {
   return (
     <svg
@@ -378,49 +503,6 @@ export function IconMessageSpark({ className, ...p }: SiteIconProps) {
     >
       <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7H8l-5 3v-3.3a8.5 8.5 0 01-1.7-9.2 8.38 8.38 0 013.8-.9" />
       <path d="M15.5 3.5l.6 2.2 2.2.6-2.2.6-.6 2.2-.6-2.2-2.2-.6 2.2-.6z" />
-    </svg>
-  )
-}
-
-export function IconCleaning({ className, ...p }: SiteIconProps) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      {...p}
-    >
-      <path d="M5 10h14l-1.2 9a2 2 0 01-2 1.8H8.2a2 2 0 01-2-1.8L5 10z" />
-      <path d="M5 10h14" />
-      <path d="M8 10V8a4 4 0 018 0v2" />
-      <circle cx="9" cy="16" r="1" fill="currentColor" stroke="none" />
-      <circle cx="12.5" cy="17" r="0.85" fill="currentColor" stroke="none" />
-      <circle cx="15" cy="15.5" r="0.75" fill="currentColor" stroke="none" />
-    </svg>
-  )
-}
-
-export function IconCooking({ className, ...p }: SiteIconProps) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      {...p}
-    >
-      <path d="M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z" />
-      <path d="M4 13c0-3 3.5-5 8-5s8 2 8 5" />
-      <path d="M9 5v2.5M12 4v3M15 5v2.5" />
     </svg>
   )
 }

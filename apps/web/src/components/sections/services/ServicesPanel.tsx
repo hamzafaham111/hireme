@@ -1,9 +1,33 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useSyncExternalStore } from 'react'
 import { SectionIntro } from '@/components/sections/shared'
 import type { ServiceDefinition } from './service-data'
 import { SERVICES } from './service-data'
+
+/** Two grid rows: 3 cols on md, 4 cols on lg (matches Tailwind `md:grid-cols-3 lg:grid-cols-4`). */
+function subscribeDesktopTwoRowPreview(cb: () => void) {
+  const mqMd = window.matchMedia('(min-width: 768px)')
+  const mqLg = window.matchMedia('(min-width: 1024px)')
+  const run = () => cb()
+  mqMd.addEventListener('change', run)
+  mqLg.addEventListener('change', run)
+  return () => {
+    mqMd.removeEventListener('change', run)
+    mqLg.removeEventListener('change', run)
+  }
+}
+
+function getDesktopTwoRowPreview(): 'off' | 'md' | 'lg' {
+  if (typeof window === 'undefined') return 'lg'
+  if (window.matchMedia('(min-width: 1024px)').matches) return 'lg'
+  if (window.matchMedia('(min-width: 768px)').matches) return 'md'
+  return 'off'
+}
+
+function getServerTwoRowPreview(): 'lg' {
+  return 'lg'
+}
 
 type LayoutMode = 'carousel' | 'grid'
 
@@ -48,13 +72,37 @@ const linkLike =
 
 /**
  * Mobile: default horizontal carousel; “See all” switches to the classic 2-column grid.
- * `md+`: always the responsive grid (toggle hidden).
+ * `md+`: responsive grid with two rows by default; “See more / See less” reveals the rest (CSS hide so SSR + mobile carousel stay in sync).
  */
 export function ServicesPanel() {
   const [layout, setLayout] = useState<LayoutMode>('carousel')
+  const [desktopExpanded, setDesktopExpanded] = useState(false)
+
+  const twoRowPreview = useSyncExternalStore(
+    subscribeDesktopTwoRowPreview,
+    getDesktopTwoRowPreview,
+    getServerTwoRowPreview,
+  )
 
   const showGrid = useCallback(() => setLayout('grid'), [])
   const showCarousel = useCallback(() => setLayout('carousel'), [])
+
+  const toggleDesktopExpanded = useCallback(() => {
+    setDesktopExpanded((v) => !v)
+  }, [])
+
+  const desktopPreviewCapacity = twoRowPreview === 'lg' ? 8 : twoRowPreview === 'md' ? 6 : 0
+  const canToggleDesktop =
+    twoRowPreview !== 'off' && SERVICES.length > desktopPreviewCapacity
+
+  /**
+   * Tablet (md–lg): 3×2 → hide from 7th item. Desktop lg+: 4×2 → hide from 9th.
+   * Below md, no hiding (carousel / 2-col grid shows the full list).
+   */
+  const desktopCollapsedRowClasses =
+    !desktopExpanded && twoRowPreview !== 'off'
+      ? 'md:max-lg:[&>li:nth-child(n+7)]:hidden lg:[&>li:nth-child(n+9)]:hidden'
+      : ''
 
   const listCarousel =
     'mt-2 flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth overscroll-x-contain pb-1 [-ms-overflow-style:none] [scrollbar-width:none] md:mt-10 md:grid md:snap-none md:grid-cols-3 md:gap-4 md:overflow-visible md:pb-0 sm:mt-4 lg:grid-cols-4 [&::-webkit-scrollbar]:hidden'
@@ -85,7 +133,7 @@ export function ServicesPanel() {
       />
 
       <ul
-        className={layout === 'carousel' ? listCarousel : listGrid}
+        className={`${layout === 'carousel' ? listCarousel : listGrid} ${desktopCollapsedRowClasses}`.trim()}
         aria-label={
           layout === 'carousel'
             ? 'Services — swipe sideways on mobile'
@@ -96,6 +144,19 @@ export function ServicesPanel() {
           <ServiceCard key={item.title} {...item} layout={layout} />
         ))}
       </ul>
+
+      {canToggleDesktop && (
+        <div className="mt-4 hidden justify-start md:flex">
+          <button
+            type="button"
+            className={linkLike}
+            onClick={toggleDesktopExpanded}
+            aria-expanded={desktopExpanded}
+          >
+            {desktopExpanded ? 'See less' : 'See more'}
+          </button>
+        </div>
+      )}
     </>
   )
 }

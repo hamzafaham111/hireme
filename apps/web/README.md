@@ -44,3 +44,4 @@ Deploy **`apps/web`** as its own project (e.g. Vercel root directory `apps/web`)
 |----------|---------|
 | `NEXT_PUBLIC_WHATSAPP_E164` | WhatsApp number for `wa.me` links (no `+`) |
 | `NEXT_PUBLIC_WHATSAPP_PREFILL` | Optional URL-encoded default message |
+| `NEXT_PUBLIC_LOCATION_UNSET_LABEL` | Optional header prompt before the user sets an area (default: “Set your area”) |

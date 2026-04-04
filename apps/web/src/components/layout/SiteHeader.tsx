@@ -2,9 +2,10 @@
 
 import Link from 'next/link'
 import { useId } from 'react'
-import { PRIMARY_NAV } from '@/lib/site-nav'
-import { siteName, siteServiceLocation } from '@/lib/site'
+import { HeaderServiceLocation } from '@/components/layout/HeaderServiceLocation'
 import { WhatsAppButton } from '@/components/whatsapp'
+import { PRIMARY_NAV } from '@/lib/site-nav'
+import { siteName } from '@/lib/site'
 
 function SearchIcon({ className }: { className?: string }) {
   return (
@@ -61,24 +62,6 @@ function FilterIcon({ className }: { className?: string }) {
   )
 }
 
-function MapPinIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
-      <circle cx="12" cy="10" r="3" />
-    </svg>
-  )
-}
-
 export function SiteHeader() {
   const searchFieldId = useId()
 
@@ -122,13 +105,7 @@ export function SiteHeader() {
           aria-label="Find services"
           onSubmit={(e) => e.preventDefault()}
         >
-          <p className="flex min-w-0 shrink-0 items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200 sm:max-w-[min(100%,14rem)]">
-            <MapPinIcon className="size-5 shrink-0 text-brand-600 dark:text-brand-400" />
-            <span className="sr-only">Service area: </span>
-            <span className="truncate" title={siteServiceLocation}>
-              {siteServiceLocation}
-            </span>
-          </p>
+          <HeaderServiceLocation />
           <div className="flex min-w-0 w-full flex-1 items-stretch gap-2 md:w-auto md:max-w-lg md:flex-none lg:max-w-xl">
             <div className="relative min-w-0 flex-1">
               <label htmlFor={searchFieldId} className="sr-only">

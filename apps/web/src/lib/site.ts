@@ -3,9 +3,12 @@
  */
 export const siteName = 'Hire Me'
 
-/** Shown in the header search strip (map pin + “City, Country”). Override with NEXT_PUBLIC_SERVICE_LOCATION. */
-export const siteServiceLocation =
-  process.env.NEXT_PUBLIC_SERVICE_LOCATION ?? 'Karachi, Pakistan'
+/**
+ * Header map strip before the user shares location (no assumed city).
+ * Override with NEXT_PUBLIC_LOCATION_UNSET_LABEL.
+ */
+export const siteLocationUnsetLabel =
+  process.env.NEXT_PUBLIC_LOCATION_UNSET_LABEL?.trim() || 'Set your area'
 
 export const siteTagline =
   'Errands, deliveries, and help on WhatsApp—whatever you need, just message us.'

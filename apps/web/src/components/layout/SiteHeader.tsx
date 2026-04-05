@@ -93,9 +93,8 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <WhatsAppButton className="gap-2 px-3 py-2 text-xs sm:px-5 sm:text-sm">
-            <span className="hidden sm:inline">WhatsApp</span>
-            <span className="sr-only sm:hidden">Open WhatsApp</span>
+          <WhatsAppButton className="!gap-1.5 !border !border-[#25D366] !bg-transparent !px-3 !py-1.5 !text-xs !text-[#25D366] !shadow-none transition-colors hover:!bg-[#25D366]/10 hover:!text-[#1da851] hover:!shadow-none dark:hover:!bg-[#25D366]/15 sm:!gap-2 sm:!px-5 sm:!text-sm">
+            WhatsApp
           </WhatsAppButton>
         </div>
         <div>

@@ -46,6 +46,11 @@ model User {
   name         String
   role         DashboardRole
   status       UserStatus
+  /** Set when an operator shares browser geolocation from the dashboard map page. */
+  lastLatitude      Float?    @map("last_latitude")
+  lastLongitude     Float?    @map("last_longitude")
+  lastLocationLabel String?   @map("last_location_label")
+  lastLocationAt    DateTime? @map("last_location_at")
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt @map("updated_at")
   blogPosts    BlogPost[]

@@ -7,13 +7,13 @@ export type PrimaryNavItem = { readonly href: string; readonly label: string }
 
 /** Hash links use `/` so they resolve from routes like `/blog`. */
 export const PRIMARY_NAV: readonly PrimaryNavItem[] = [
-  { href: '/blog', label: 'Blog' },
   { href: '/#services', label: 'Services' },
   { href: '/#near-you', label: 'Popular near you' },
   { href: '/#how-it-works', label: 'How it works' },
   { href: '/#partners', label: 'Partners' },
   { href: '/#reviews', label: 'Reviews' },
   { href: '/#faq', label: 'FAQ' },
+  { href: '/blog', label: 'Blog' },
 ] as const
 
 /**

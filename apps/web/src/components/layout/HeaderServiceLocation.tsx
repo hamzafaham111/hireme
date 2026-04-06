@@ -103,7 +103,7 @@ export function HeaderServiceLocation() {
   }, [])
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col gap-1 sm:max-w-[min(100%,18rem)] sm:flex-none">
+    <div className="flex min-w-0 flex-1 flex-col md:flex-row gap-1 sm:max-w-[min(100%,18rem)] sm:flex-none">
       {!hasChosenLocation ? (
         <button
           type="button"
@@ -130,7 +130,7 @@ export function HeaderServiceLocation() {
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pl-7 sm:pl-0">
             <button
               type="button"
-              className={linkBtn}
+              className={linkBtn + ' md:ml-2'}
               onClick={requestLocation}
               disabled={loading}
               aria-busy={loading}

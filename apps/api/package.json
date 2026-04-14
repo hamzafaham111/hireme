@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "Hire Me API — NestJS + PostgreSQL (Prisma)",
   "scripts": {
-    "prebuild": "npm run build -w @hire-me/types",
+    "prebuild": "npm run build -w @hire-me/types && prisma generate",
     "build": "nest build",
     "predev": "npm run build -w @hire-me/types",
     "dev": "nest start --watch",
@@ -17,9 +17,6 @@
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
     "db:seed": "prisma db seed"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@hire-me/types": "*",

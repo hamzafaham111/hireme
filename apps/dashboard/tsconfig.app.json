@@ -8,6 +8,14 @@
     "module": "ESNext",
     "types": ["vite/client"],
     "skipLibCheck": true,
+    /**
+     * Match `vite.config.ts` resolve.alias: `@hire-me/types` publishes `dist/` only; without a
+     * prior `npm run build -w @hire-me/types`, `tsc` cannot resolve types. Point TS at source.
+     * Paths are relative to this config file (TS 6+ — no `baseUrl`; use `./`-prefixed targets).
+     */
+    "paths": {
+      "@hire-me/types": ["./../../packages/types/src/index.ts"]
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",

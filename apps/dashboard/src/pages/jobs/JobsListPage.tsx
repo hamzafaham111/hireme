@@ -5,6 +5,7 @@ import { AssignWorkerModal } from '../../components/domain/AssignWorkerModal'
 import { JobStatusBadge } from '../../components/domain/StatusBadges'
 import { IconAssignWorker } from '../../components/icons/AssignWorkerIcon'
 import { AddActionLink } from '../../components/ui/AddActionLink'
+import { ConfirmDialog } from '../../components/ui/ConfirmDialog'
 import {
   ListFilterToolbar,
   type StatusFilterOption,
@@ -46,8 +47,12 @@ function isJobUnassigned(job: Job): boolean {
 }
 
 export function JobsListPage() {
-  const { jobs, workers, saveJob } = useOperationsData()
+  const { jobs, workers, saveJob, deleteJob } = useOperationsData()
   const [assignJob, setAssignJob] = useState<Job | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string
+    jobId: string
+  } | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
 
@@ -63,60 +68,71 @@ export function JobsListPage() {
     [workers],
   )
 
-  const columns: DataTableColumn<Job>[] = [
-    {
-      key: 'jobId',
-      header: 'Job ID',
-      cell: (row) => (
-        <code className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-800 dark:bg-slate-800 dark:text-slate-200">
-          {row.jobId}
-        </code>
-      ),
-    },
-    { key: 'summary', header: 'Request summary', className: 'max-w-[280px]' },
-    { key: 'service', header: 'Service' },
-    { key: 'area', header: 'Area' },
-    {
-      key: 'status',
-      header: 'Status',
-      cell: (row) => <JobStatusBadge status={row.status} />,
-    },
-    { key: 'assignedWorker', header: 'Assigned worker' },
-    {
-      key: 'id',
-      header: 'Actions',
-      headerClassName:
-        'min-w-[220px] whitespace-nowrap text-right align-middle',
-      className: 'whitespace-nowrap text-right align-middle',
-      cell: (row) => (
-        <div className="flex flex-row flex-nowrap items-center justify-end gap-2">
-          {isJobUnassigned(row) ? (
+  const columns = useMemo<DataTableColumn<Job>[]>(
+    () => [
+      {
+        key: 'jobId',
+        header: 'Job ID',
+        cell: (row) => (
+          <code className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-800 dark:bg-slate-800 dark:text-slate-200">
+            {row.jobId}
+          </code>
+        ),
+      },
+      { key: 'summary', header: 'Request summary', className: 'max-w-[280px]' },
+      { key: 'service', header: 'Service' },
+      { key: 'area', header: 'Area' },
+      {
+        key: 'status',
+        header: 'Status',
+        cell: (row) => <JobStatusBadge status={row.status} />,
+      },
+      { key: 'assignedWorker', header: 'Assigned worker' },
+      {
+        key: 'id',
+        header: 'Actions',
+        headerClassName:
+          'min-w-[280px] whitespace-nowrap text-right align-middle',
+        className: 'whitespace-nowrap text-right align-middle',
+        cell: (row) => (
+          <div className="flex flex-row flex-nowrap items-center justify-end gap-2">
+            {isJobUnassigned(row) ? (
+              <button
+                type="button"
+                aria-label={`Assign worker to ${row.jobId}`}
+                onClick={() => setAssignJob(row)}
+                className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-indigo-200/90 bg-indigo-50/90 px-2 py-1 text-xs font-medium text-indigo-800 transition hover:bg-indigo-100 dark:border-indigo-800/60 dark:bg-indigo-950/50 dark:text-indigo-200 dark:hover:bg-indigo-900/50"
+              >
+                <IconAssignWorker className="size-3.5 shrink-0 opacity-90" />
+                Assign
+              </button>
+            ) : null}
+            <Link
+              to={`/jobs/${row.id}`}
+              className="inline-flex shrink-0 rounded-lg px-2 py-1 text-xs font-medium whitespace-nowrap text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-950/40"
+            >
+              View
+            </Link>
+            <Link
+              to={`/jobs/${row.id}/edit`}
+              className="inline-flex shrink-0 rounded-lg px-2 py-1 text-xs font-medium whitespace-nowrap text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+            >
+              Edit
+            </Link>
             <button
               type="button"
-              aria-label={`Assign worker to ${row.jobId}`}
-              onClick={() => setAssignJob(row)}
-              className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-indigo-200/90 bg-indigo-50/90 px-2 py-1 text-xs font-medium text-indigo-800 transition hover:bg-indigo-100 dark:border-indigo-800/60 dark:bg-indigo-950/50 dark:text-indigo-200 dark:hover:bg-indigo-900/50"
+              aria-label={`Delete job ${row.jobId}`}
+              className="inline-flex shrink-0 rounded-lg px-2 py-1 text-xs font-medium whitespace-nowrap text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/40"
+              onClick={() => setDeleteTarget({ id: row.id, jobId: row.jobId })}
             >
-              <IconAssignWorker className="size-3.5 shrink-0 opacity-90" />
-              Assign
+              Delete
             </button>
-          ) : null}
-          <Link
-            to={`/jobs/${row.id}`}
-            className="inline-flex shrink-0 rounded-lg px-2 py-1 text-xs font-medium whitespace-nowrap text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-950/40"
-          >
-            View
-          </Link>
-          <Link
-            to={`/jobs/${row.id}/edit`}
-            className="inline-flex shrink-0 rounded-lg px-2 py-1 text-xs font-medium whitespace-nowrap text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
-          >
-            Edit
-          </Link>
-        </div>
-      ),
-    },
-  ]
+          </div>
+        ),
+      },
+    ],
+    [],
+  )
 
   return (
     <div className="space-y-4">
@@ -164,6 +180,32 @@ export function JobsListPage() {
         activeWorkers={activeWorkers}
         onSave={async (job, assignedWorker) => {
           await saveJob({ ...job, assignedWorker })
+        }}
+      />
+
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        onClose={() => setDeleteTarget(null)}
+        title="Delete job?"
+        description={
+          deleteTarget ? (
+            <>
+              Job{' '}
+              <code className="rounded bg-slate-100 px-1 py-0.5 text-xs dark:bg-slate-800">
+                {deleteTarget.jobId}
+              </code>{' '}
+              will be removed. Demo only — prefer status changes in production.
+            </>
+          ) : null
+        }
+        variant="danger"
+        cancelLabel="Cancel"
+        confirmLabel="Delete"
+        onConfirm={async () => {
+          if (!deleteTarget) return
+          await deleteJob(deleteTarget.id)
+          if (assignJob?.id === deleteTarget.id) setAssignJob(null)
+          setDeleteTarget(null)
         }}
       />
     </div>

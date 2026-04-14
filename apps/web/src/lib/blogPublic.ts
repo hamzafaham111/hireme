@@ -1,9 +1,6 @@
 import type { BlogPost } from '@hire-me/types'
 
-function apiBase(): string {
-  const raw = process.env.NEXT_PUBLIC_API_URL?.trim()
-  return raw && raw.length > 0 ? raw.replace(/\/$/, '') : 'http://localhost:4000/api/v1'
-}
+import { getPublicApiBaseUrl } from '@/lib/public-api-base'
 
 async function parseJson<T>(res: Response): Promise<T | null> {
   const text = await res.text()
@@ -20,8 +17,10 @@ async function parseJson<T>(res: Response): Promise<T | null> {
  * Fails soft when the API is unreachable (e.g. `next build` while the API is down).
  */
 export async function fetchPublishedPosts(): Promise<BlogPost[]> {
+  const base = getPublicApiBaseUrl()
+  if (!base) return []
   try {
-    const res = await fetch(`${apiBase()}/blog/posts`, { next: { revalidate: 60 } })
+    const res = await fetch(`${base}/blog/posts`, { next: { revalidate: 60 } })
     if (!res.ok) return []
     const data = await parseJson<BlogPost[]>(res)
     return Array.isArray(data) ? data : []
@@ -31,9 +30,11 @@ export async function fetchPublishedPosts(): Promise<BlogPost[]> {
 }
 
 export async function fetchPostBySlug(slug: string): Promise<BlogPost | null> {
+  const base = getPublicApiBaseUrl()
+  if (!base) return null
   try {
     const enc = encodeURIComponent(slug)
-    const res = await fetch(`${apiBase()}/blog/posts/by-slug/${enc}`, {
+    const res = await fetch(`${base}/blog/posts/by-slug/${enc}`, {
       next: { revalidate: 60 },
     })
     if (res.status === 404) return null

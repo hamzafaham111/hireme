@@ -9,9 +9,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 export default defineConfig({
   plugins: [react()],
   build: {
+    // After splitting React / router / MD editor, one large `vendor` chunk can remain (misc deps).
+    chunkSizeWarningLimit: 1100,
     rollupOptions: {
       output: {
-        // Keeps chunks under Vite's default 500 kB warning (heavy deps: MD editor, React).
         manualChunks(id) {
           if (!id.includes('node_modules')) return
           if (id.includes('@uiw/react-md-editor') || id.includes('@codemirror')) {

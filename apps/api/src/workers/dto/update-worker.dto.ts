@@ -1,4 +1,13 @@
-import { IsIn, IsNumber, IsOptional, IsString, MinLength } from 'class-validator'
+import {
+  ArrayMinSize,
+  IsArray,
+  IsIn,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+} from 'class-validator'
 
 const STATUSES = ['active', 'not-active', 'on-hold', 'canceled'] as const
 
@@ -23,10 +32,12 @@ export class UpdateWorkerDto {
   @MinLength(1)
   location?: string
 
+  /** When set, replaces catalog links and syncs denormalized `service` from selected titles. */
   @IsOptional()
-  @IsString()
-  @MinLength(1)
-  service?: string
+  @IsArray()
+  @ArrayMinSize(1)
+  @IsUUID(undefined, { each: true })
+  siteServiceIds?: string[]
 
   @IsOptional()
   @IsIn(STATUSES)

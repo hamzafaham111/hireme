@@ -1,19 +1,18 @@
 import { type FormEvent, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { SiteServicePickCombobox } from '../../components/domain/SiteServicePickCombobox'
 import { Select } from '../../components/ui/Select'
 import { useOperationsData } from '../../context/OperationsDataContext'
+import { formInputClass, formLabelClass } from '../../lib/formStyles'
 import type { Worker } from '@hire-me/types'
-
-const inputClass =
-  'w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-100 dark:focus:border-indigo-400'
-
-const labelClass = 'mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-200'
 
 const defaultForm = (): Omit<Worker, 'id' | 'workerId'> => ({
   name: '',
   phone: '',
   location: '',
   service: '',
+  siteServiceId: null,
+  siteServiceIds: [],
   status: 'active',
   internalRating: 4,
   customerRating: 4,
@@ -28,6 +27,8 @@ export function WorkerFormPage() {
     saveWorker,
     createWorkerId,
     allocateWorkerCode,
+    siteServices,
+    loading: opsLoading,
   } = useOperationsData()
 
   const existing = isEdit && workerId ? getWorker(workerId) : undefined
@@ -39,6 +40,8 @@ export function WorkerFormPage() {
           phone: existing.phone,
           location: existing.location,
           service: existing.service,
+          siteServiceId: existing.siteServiceId,
+          siteServiceIds: existing.siteServiceIds ?? (existing.siteServiceId ? [existing.siteServiceId] : []),
           status: existing.status,
           internalRating: existing.internalRating,
           customerRating: existing.customerRating,
@@ -57,6 +60,8 @@ export function WorkerFormPage() {
           phone: w.phone,
           location: w.location,
           service: w.service,
+          siteServiceId: w.siteServiceId,
+          siteServiceIds: w.siteServiceIds ?? (w.siteServiceId ? [w.siteServiceId] : []),
           status: w.status,
           internalRating: w.internalRating,
           customerRating: w.customerRating,
@@ -80,6 +85,10 @@ export function WorkerFormPage() {
     }
     if (Number.isNaN(custR) || custR < 0 || custR > 5) {
       setError('Customer rating must be between 0 and 5.')
+      return
+    }
+    if (form.siteServiceIds.length === 0) {
+      setError('Select at least one service from the catalog.')
       return
     }
 
@@ -133,7 +142,7 @@ export function WorkerFormPage() {
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           {isEdit
             ? 'Update details shown across the dashboard.'
-            : 'Creates a new service provider record (demo persistence in local storage).'}
+            : 'Creates a new worker in the API; link them to one or more catalog services.'}
         </p>
 
         {error ? (
@@ -148,9 +157,9 @@ export function WorkerFormPage() {
         <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
           {isEdit && existing ? (
             <div className="sm:col-span-2">
-              <label className={labelClass}>Worker ID</label>
+              <label className={formLabelClass}>Worker ID</label>
               <input
-                className={`${inputClass} bg-slate-50 dark:bg-slate-800/50`}
+                className={`${formInputClass} bg-slate-50 dark:bg-slate-800/50`}
                 value={existing.workerId}
                 readOnly
               />
@@ -158,59 +167,71 @@ export function WorkerFormPage() {
           ) : null}
 
           <div className="sm:col-span-2">
-            <label className={labelClass} htmlFor="w-name">
+            <label className={formLabelClass} htmlFor="w-name">
               Full name
             </label>
             <input
               id="w-name"
-              className={inputClass}
+              className={formInputClass}
               value={form.name}
               onChange={(e) => update('name', e.target.value)}
               required
             />
           </div>
           <div>
-            <label className={labelClass} htmlFor="w-phone">
+            <label className={formLabelClass} htmlFor="w-phone">
               Phone
             </label>
             <input
               id="w-phone"
-              className={inputClass}
+              className={formInputClass}
               value={form.phone}
               onChange={(e) => update('phone', e.target.value)}
               required
             />
           </div>
           <div>
-            <label className={labelClass} htmlFor="w-location">
+            <label className={formLabelClass} htmlFor="w-location">
               Location / area
             </label>
             <input
               id="w-location"
-              className={inputClass}
+              className={formInputClass}
               value={form.location}
               onChange={(e) => update('location', e.target.value)}
               required
             />
           </div>
-          <div className="sm:col-span-2">
-            <label className={labelClass} htmlFor="w-service">
-              Service
-            </label>
-            <input
-              id="w-service"
-              className={inputClass}
-              value={form.service}
-              onChange={(e) => update('service', e.target.value)}
-              placeholder="e.g. Driver, Vet, Babysitter"
-              required
-            />
-          </div>
+          <SiteServicePickCombobox
+            services={siteServices}
+            values={form.siteServiceIds}
+            onChange={(ids) => {
+              const titles = ids
+                .map((id) => siteServices.find((s) => s.id === id)?.title)
+                .filter((x): x is string => Boolean(x))
+              setForm((f) => ({
+                ...f,
+                siteServiceIds: ids,
+                siteServiceId: ids[0] ?? null,
+                service: titles.length > 0 ? titles.join(', ') : f.service,
+              }))
+            }}
+            label="Services"
+            labelClassName={formLabelClass}
+            disabled={opsLoading}
+            hint={
+              opsLoading
+                ? 'Loading catalog…'
+                : siteServices.length === 0
+                  ? 'No site services in the API yet. Add them under Site services, then refresh.'
+                  : undefined
+            }
+          />
           <div>
             <Select
               id="w-status"
               label="Status"
-              labelClassName={labelClass}
+              labelClassName={formLabelClass}
               value={form.status}
               onChange={(v) => update('status', v as Worker['status'])}
               options={[
@@ -223,7 +244,7 @@ export function WorkerFormPage() {
           </div>
           <div className="hidden sm:block" aria-hidden />
           <div>
-            <label className={labelClass} htmlFor="w-int">
+            <label className={formLabelClass} htmlFor="w-int">
               Internal rating (0–5)
             </label>
             <input
@@ -232,14 +253,14 @@ export function WorkerFormPage() {
               step="0.1"
               min={0}
               max={5}
-              className={inputClass}
+              className={formInputClass}
               value={form.internalRating}
               onChange={(e) => update('internalRating', Number(e.target.value))}
               required
             />
           </div>
           <div>
-            <label className={labelClass} htmlFor="w-cust">
+            <label className={formLabelClass} htmlFor="w-cust">
               Customer rating (0–5)
             </label>
             <input
@@ -248,7 +269,7 @@ export function WorkerFormPage() {
               step="0.1"
               min={0}
               max={5}
-              className={inputClass}
+              className={formInputClass}
               value={form.customerRating}
               onChange={(e) => update('customerRating', Number(e.target.value))}
               required

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type MouseEvent } from 'react'
 import { scrollToHomeHash } from '@/lib/scroll-home-hash'
-import { MOBILE_TAB_ICONS } from '@/components/icons/site-icons'
+import { MOBILE_TAB_ICONS } from '@hire-me/site-icons'
 import { MOBILE_TAB_ITEMS } from '@/lib/site-nav'
 import { whatsappHref } from '@/lib/site'
 

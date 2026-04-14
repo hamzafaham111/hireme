@@ -5,8 +5,8 @@ import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import type { Express } from 'express'
 
-/** Allowed marketing image types → safe file extension on disk */
-export const BLOG_IMAGE_MIME_TO_EXT: Record<string, string> = {
+/** Allowed image MIME types → safe file extension on disk (blog covers, site-service icons, etc.). */
+export const IMAGE_UPLOAD_MIME_TO_EXT: Record<string, string> = {
   'image/jpeg': '.jpg',
   'image/png': '.png',
   'image/gif': '.gif',
@@ -15,8 +15,12 @@ export const BLOG_IMAGE_MIME_TO_EXT: Record<string, string> = {
 
 const MAX_BYTES = 5 * 1024 * 1024
 
+/**
+ * Writes images under `UPLOAD_DIR` and returns public `/uploads/...` URLs.
+ * Shared by blog and site-services (and any future marketing uploads).
+ */
 @Injectable()
-export class BlogImageUploadService implements OnModuleInit {
+export class ImageUploadService implements OnModuleInit {
   private readonly dir: string
 
   constructor(private readonly config: ConfigService) {
@@ -49,7 +53,7 @@ export class BlogImageUploadService implements OnModuleInit {
     if (file.size > MAX_BYTES) {
       throw new BadRequestException('Image must be 5 MB or smaller.')
     }
-    const ext = BLOG_IMAGE_MIME_TO_EXT[file.mimetype]
+    const ext = IMAGE_UPLOAD_MIME_TO_EXT[file.mimetype]
     if (!ext) {
       throw new BadRequestException('Only JPEG, PNG, GIF, and WebP images are allowed.')
     }

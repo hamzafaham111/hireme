@@ -59,18 +59,25 @@ model User {
 }
 
 model Worker {
-  id               String       @id @default(uuid())
-  workerId         String       @unique @map("worker_id")
+  id               String        @id @default(uuid())
+  workerId         String        @unique @map("worker_id")
   name             String
   phone            String
   location         String
+  /** Denormalized labels joined from selected catalog services. */
   service          String
   status           WorkerStatus
-  internalRating   Float        @map("internal_rating")
-  customerRating   Float        @map("customer_rating")
-  createdAt        DateTime     @default(now()) @map("created_at")
-  updatedAt        DateTime     @updatedAt @map("updated_at")
+  internalRating   Float         @map("internal_rating")
+  customerRating   Float         @map("customer_rating")
+  /** Source of truth: multiple catalog links for worker capabilities. */
+  siteServiceIds   String[]      @default([]) @map("site_service_ids")
+  /** Backward-compatible primary catalog link (first item from `siteServiceIds`). */
+  siteServiceId    String?       @map("site_service_id")
+  siteService      SiteService?  @relation(fields: [siteServiceId], references: [id], onDelete: SetNull)
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
 
+  @@index([siteServiceId])
   @@map("workers")
 }
 
@@ -104,4 +111,24 @@ model BlogPost {
 
   @@index([status])
   @@map("blog_posts")
+}
+
+/** Homepage / public site service cards; managed from the operations dashboard. */
+model SiteService {
+  id               String   @id @default(uuid())
+  /** Immutable ops reference (SS-01, SS-02, …) for workers and integrations; not the URL slug. */
+  serviceKey       String   @unique @map("service_key")
+  slug             String   @unique
+  title            String
+  shortDescription String   @map("short_description")
+  iconKey          String   @map("icon_key")
+  iconImageUrl     String?  @map("icon_image_url")
+  sortOrder        Int      @default(0) @map("sort_order")
+  isActive         Boolean  @default(true) @map("is_active")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+  workers          Worker[]
+
+  @@index([isActive, sortOrder])
+  @@map("site_services")
 }

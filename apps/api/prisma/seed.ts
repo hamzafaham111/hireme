@@ -113,10 +113,154 @@ const JOBS: Array<{
   },
 ]
 
+/** Mirrors legacy homepage `service-data.ts` — icon keys match `@hire-me/types` allowlist. */
+const SITE_SERVICES_SEED: Array<{
+  slug: string
+  title: string
+  shortDescription: string
+  iconKey: string
+  sortOrder: number
+}> = [
+  {
+    slug: 'express-delivery',
+    title: 'Express delivery',
+    shortDescription: 'Same-day parcels and documents, door to door.',
+    iconKey: 'express',
+    sortOrder: 0,
+  },
+  {
+    slug: 'personal-shopping',
+    title: 'Personal shopping',
+    shortDescription: 'We shop the stores you pick; we deliver.',
+    iconKey: 'shopping-bag',
+    sortOrder: 1,
+  },
+  {
+    slug: 'groceries-takeout',
+    title: 'Groceries & takeout',
+    shortDescription: 'Markets, cafés, and meal pickup runs.',
+    iconKey: 'grocery',
+    sortOrder: 2,
+  },
+  {
+    slug: 'cooking-meal-prep',
+    title: 'Cooking & meal prep',
+    shortDescription: 'Help in the kitchen or ready-to-heat drop-offs.',
+    iconKey: 'cooking',
+    sortOrder: 3,
+  },
+  {
+    slug: 'pharmacy-runs',
+    title: 'Pharmacy runs',
+    shortDescription: 'Prescriptions and essentials, discreet.',
+    iconKey: 'pharmacy',
+    sortOrder: 4,
+  },
+  {
+    slug: 'banking-paperwork',
+    title: 'Banking & paperwork',
+    shortDescription: 'Cheques, deposits, and document handovers.',
+    iconKey: 'bank-paper',
+    sortOrder: 5,
+  },
+  {
+    slug: 'gifts-luxe-shopping',
+    title: 'Gifts & luxe shopping',
+    shortDescription: 'Flowers, gifts, and boutique buys.',
+    iconKey: 'gift',
+    sortOrder: 6,
+  },
+  {
+    slug: 'furniture-bulky-pickup',
+    title: 'Furniture & bulky pickup',
+    shortDescription: 'Big-box and heavy items to your home.',
+    iconKey: 'bulky',
+    sortOrder: 7,
+  },
+  {
+    slug: 'car-motor-errands',
+    title: 'Car & motor errands',
+    shortDescription: 'Testing, renewals, and agency visits.',
+    iconKey: 'car',
+    sortOrder: 8,
+  },
+  {
+    slug: 'queue-wait-service',
+    title: 'Queue & wait service',
+    shortDescription: 'We wait at banks, counters, and busy lines.',
+    iconKey: 'queue',
+    sortOrder: 9,
+  },
+  {
+    slug: 'pet-taxi-vet',
+    title: 'Pet taxi & vet trips',
+    shortDescription: 'Safe rides and help for vet visits.',
+    iconKey: 'paw',
+    sortOrder: 10,
+  },
+  {
+    slug: 'home-key-handovers',
+    title: 'Home & key handovers',
+    shortDescription: 'Check-ins, keys, and errands at your place.',
+    iconKey: 'home-key',
+    sortOrder: 11,
+  },
+  {
+    slug: 'real-estate-agents',
+    title: 'Real estate agents',
+    shortDescription: 'Showings, lockboxes, staging drops, and buyer errands.',
+    iconKey: 'real-estate',
+    sortOrder: 12,
+  },
+  {
+    slug: 'cleaning',
+    title: 'Cleaning',
+    shortDescription: 'Home tidy-ups, deep cleans, and move-out help.',
+    iconKey: 'cleaning',
+    sortOrder: 13,
+  },
+  {
+    slug: 'tour-guides',
+    title: 'Tour guides',
+    shortDescription: 'City walks, sites, museums, and private day trips.',
+    iconKey: 'tour-guide',
+    sortOrder: 14,
+  },
+  {
+    slug: 'translators',
+    title: 'Translators',
+    shortDescription: 'On-site interpretation and document language help.',
+    iconKey: 'translate',
+    sortOrder: 15,
+  },
+  {
+    slug: 'tutors',
+    title: 'Tutors',
+    shortDescription: 'Homework help, skills coaching, and exam prep sessions.',
+    iconKey: 'tutor',
+    sortOrder: 16,
+  },
+  {
+    slug: 'office-business',
+    title: 'Office & business',
+    shortDescription: 'Team errands and supplies—one WhatsApp thread.',
+    iconKey: 'briefcase',
+    sortOrder: 17,
+  },
+  {
+    slug: 'anything-else',
+    title: 'Anything legal',
+    shortDescription: 'Describe it; we quote clearly and run it.',
+    iconKey: 'message-spark',
+    sortOrder: 18,
+  },
+]
+
 async function main() {
   const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 10)
 
   await prisma.blogPost.deleteMany()
+  await prisma.siteService.deleteMany()
   await prisma.job.deleteMany()
   await prisma.worker.deleteMany()
   await prisma.user.deleteMany()
@@ -158,8 +302,38 @@ async function main() {
     },
   })
 
+  for (let i = 0; i < SITE_SERVICES_SEED.length; i++) {
+    const s = SITE_SERVICES_SEED[i]
+    const n = i + 1
+    const serviceKey = `SS-${String(n).padStart(2, '0')}`
+    await prisma.siteService.create({
+      data: {
+        serviceKey,
+        slug: s.slug,
+        title: s.title,
+        shortDescription: s.shortDescription,
+        iconKey: s.iconKey,
+        sortOrder: s.sortOrder,
+        isActive: true,
+      },
+    })
+  }
+
+  const servicesByTitle = new Map(
+    (await prisma.siteService.findMany({ select: { id: true, title: true } })).map(
+      (row) => [row.title, row.id] as const,
+    ),
+  )
+
   for (const w of WORKERS) {
-    await prisma.worker.create({ data: w })
+    const siteServiceId = servicesByTitle.get(w.service) ?? null
+    await prisma.worker.create({
+      data: {
+        ...w,
+        siteServiceIds: siteServiceId ? [siteServiceId] : [],
+        siteServiceId,
+      },
+    })
   }
   for (const j of JOBS) {
     await prisma.job.create({ data: j })

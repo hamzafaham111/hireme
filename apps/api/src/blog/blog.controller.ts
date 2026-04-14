@@ -23,9 +23,9 @@ import { Roles } from '../common/decorators/roles.decorator'
 import { OptionalJwtAuthGuard } from '../common/guards/optional-jwt-auth.guard'
 import { RolesGuard } from '../common/guards/roles.guard'
 import {
-  BLOG_IMAGE_MIME_TO_EXT,
-  BlogImageUploadService,
-} from './blog-image-upload.service'
+  IMAGE_UPLOAD_MIME_TO_EXT,
+  ImageUploadService,
+} from '../uploads/image-upload.service'
 import { BlogService } from './blog.service'
 import { CreateBlogPostDto } from './dto/create-blog-post.dto'
 import { UpdateBlogPostDto } from './dto/update-blog-post.dto'
@@ -34,7 +34,7 @@ import { UpdateBlogPostDto } from './dto/update-blog-post.dto'
 export class BlogController {
   constructor(
     private readonly blog: BlogService,
-    private readonly blogImages: BlogImageUploadService,
+    private readonly imageUpload: ImageUploadService,
   ) {}
 
   @Get('posts')
@@ -64,7 +64,7 @@ export class BlogController {
       storage: memoryStorage(),
       limits: { fileSize: 5 * 1024 * 1024 },
       fileFilter: (_req, file, cb) => {
-        const ok = Boolean(BLOG_IMAGE_MIME_TO_EXT[file.mimetype])
+        const ok = Boolean(IMAGE_UPLOAD_MIME_TO_EXT[file.mimetype])
         cb(
           ok
             ? null
@@ -80,7 +80,7 @@ export class BlogController {
     if (!file) {
       throw new BadRequestException('Missing file field `file`.')
     }
-    return this.blogImages.saveUploadedImage(file)
+    return this.imageUpload.saveUploadedImage(file)
   }
 
   @Post('posts')

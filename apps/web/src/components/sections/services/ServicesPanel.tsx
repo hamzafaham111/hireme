@@ -1,9 +1,9 @@
 'use client'
 
 import { useCallback, useState, useSyncExternalStore } from 'react'
+import type { SiteService } from '@hire-me/types'
 import { SectionIntro } from '@/components/sections/shared'
-import type { ServiceDefinition } from './service-data'
-import { SERVICES } from './service-data'
+import { SiteServiceIconVisual } from './site-service-icon-registry'
 
 /** Two grid rows: 3 cols on md, 4 cols on lg (matches Tailwind `md:grid-cols-3 lg:grid-cols-4`). */
 function subscribeDesktopTwoRowPreview(cb: () => void) {
@@ -32,11 +32,13 @@ function getServerTwoRowPreview(): 'lg' {
 type LayoutMode = 'carousel' | 'grid'
 
 function ServiceCard({
-  title,
-  tagline,
-  Icon,
+  service,
   layout,
-}: ServiceDefinition & { layout: LayoutMode }) {
+}: {
+  service: SiteService
+  layout: LayoutMode
+}) {
+  const hasUploadedImage = Boolean(service.iconImageUrl?.trim())
   const carouselLi =
     layout === 'carousel'
       ? 'max-md:shrink-0 max-md:snap-start max-md:basis-[calc((100%-1rem)/2.2)]'
@@ -49,17 +51,24 @@ function ServiceCard({
         role="presentation"
       >
         <div
-          className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand-500/[0.12] text-brand-600 transition group-hover:bg-brand-500/[0.18] dark:bg-brand-400/15 dark:text-brand-300 dark:group-hover:bg-brand-400/25 sm:size-14 sm:rounded-2xl"
+          className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-brand-500/[0.12] text-brand-600 transition group-hover:bg-brand-500/[0.18] dark:bg-brand-400/15 dark:text-brand-300 dark:group-hover:bg-brand-400/25 sm:size-16 sm:rounded-2xl"
           aria-hidden
         >
-          <Icon className="size-5 sm:size-7" />
+          <SiteServiceIconVisual
+            service={service}
+            className={
+              hasUploadedImage
+                ? 'size-full object-cover'
+                : 'size-[78%] object-contain'
+            }
+          />
         </div>
         <div className="min-w-0 flex-1 text-left">
           <p className="font-display text-[13px] font-semibold leading-snug text-slate-900 sm:text-base dark:text-white">
-            {title}
+            {service.title}
           </p>
           <p className="mt-1 text-left text-[10px] leading-snug text-slate-600 line-clamp-3 sm:mt-1.5 sm:text-xs sm:leading-relaxed dark:text-slate-400 md:line-clamp-none">
-            {tagline}
+            {service.shortDescription}
           </p>
         </div>
       </div>
@@ -70,11 +79,7 @@ function ServiceCard({
 const linkLike =
   'text-sm font-semibold text-brand-600 underline-offset-4 transition hover:text-brand-700 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 dark:text-brand-400 dark:hover:text-brand-300'
 
-/**
- * Mobile: default horizontal carousel; “See all” switches to the classic 2-column grid.
- * `md+`: responsive grid with two rows by default; “See more / See less” reveals the rest (CSS hide so SSR + mobile carousel stay in sync).
- */
-export function ServicesPanel() {
+export function ServicesPanel({ services }: { services: SiteService[] }) {
   const [layout, setLayout] = useState<LayoutMode>('carousel')
   const [desktopExpanded, setDesktopExpanded] = useState(false)
 
@@ -93,12 +98,8 @@ export function ServicesPanel() {
 
   const desktopPreviewCapacity = twoRowPreview === 'lg' ? 8 : twoRowPreview === 'md' ? 6 : 0
   const canToggleDesktop =
-    twoRowPreview !== 'off' && SERVICES.length > desktopPreviewCapacity
+    twoRowPreview !== 'off' && services.length > desktopPreviewCapacity
 
-  /**
-   * Tablet (md–lg): 3×2 → hide from 7th item. Desktop lg+: 4×2 → hide from 9th.
-   * Below md, no hiding (carousel / 2-col grid shows the full list).
-   */
   const desktopCollapsedRowClasses =
     !desktopExpanded && twoRowPreview !== 'off'
       ? 'md:max-lg:[&>li:nth-child(n+7)]:hidden lg:[&>li:nth-child(n+9)]:hidden'
@@ -109,6 +110,22 @@ export function ServicesPanel() {
 
   const listGrid =
     'mt-2 grid grid-cols-2 gap-3 md:mt-10 md:grid-cols-3 md:gap-4 sm:mt-14 lg:grid-cols-4'
+
+  if (services.length === 0) {
+    return (
+      <>
+        <SectionIntro
+          eyebrow="What we do"
+          title="Services"
+          description="Pick what fits your errand, then message us on WhatsApp—updates stay in one chat."
+          hideEyebrowAndDescriptionBelowMd
+        />
+        <p className="mt-6 text-sm text-slate-600 dark:text-slate-400">
+          No services to show yet. Add them from the dashboard (Site services).
+        </p>
+      </>
+    )
+  }
 
   return (
     <>
@@ -140,8 +157,8 @@ export function ServicesPanel() {
             : 'All services'
         }
       >
-        {SERVICES.map((item) => (
-          <ServiceCard key={item.title} {...item} layout={layout} />
+        {services.map((item) => (
+          <ServiceCard key={item.id} service={item} layout={layout} />
         ))}
       </ul>
 

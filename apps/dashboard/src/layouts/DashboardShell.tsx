@@ -5,12 +5,14 @@ import {
   IconBriefcase,
   IconHome,
   IconJobs,
+  IconSiteServices,
   IconUsers,
   IconWorker,
 } from '../components/icons/NavIcons'
 import { DashboardLayout } from '../components/layout/DashboardLayout'
 import type { NavItem } from '../components/layout/Sidebar'
 import { useAuth } from '../context/AuthContext'
+import { useOperationsData } from '../context/OperationsDataContext'
 import { dashboardHeader } from '../lib/dashboardHeader'
 
 /**
@@ -20,6 +22,7 @@ export default function DashboardShell() {
   const location = useLocation()
   const navigate = useNavigate()
   const { logout, user } = useAuth()
+  const { opsError, clearOpsError } = useOperationsData()
   const { title, subtitle } = dashboardHeader(location.pathname)
 
   /** Content editors only manage marketing blog posts — keep ops routes unreachable. */
@@ -43,6 +46,12 @@ export default function DashboardShell() {
         label: 'Blog',
         icon: <IconBlog className="size-5" />,
         to: '/blog',
+      },
+      {
+        id: 'site-services',
+        label: 'Site services',
+        icon: <IconSiteServices className="size-5" />,
+        to: '/site-services',
       },
       {
         id: 'users',
@@ -106,6 +115,24 @@ export default function DashboardShell() {
         </div>
       }
     >
+      {user?.role !== 'content_editor' && opsError ? (
+        <div
+          className="mb-4 flex flex-col gap-2 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-900 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-100 sm:flex-row sm:items-center sm:justify-between"
+          role="alert"
+        >
+          <span>
+            <span className="font-medium">Could not load operations data.</span>{' '}
+            <span className="opacity-90">{opsError}</span>
+          </span>
+          <button
+            type="button"
+            className="self-start rounded-lg border border-rose-300 bg-white px-2.5 py-1 text-xs font-medium text-rose-900 shadow-sm transition hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950 dark:text-rose-50 dark:hover:bg-rose-900"
+            onClick={() => clearOpsError()}
+          >
+            Dismiss
+          </button>
+        </div>
+      ) : null}
       <Outlet />
     </DashboardLayout>
   )

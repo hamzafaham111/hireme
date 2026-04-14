@@ -8,6 +8,7 @@ import { HealthController } from './health.controller'
 import { JobsModule } from './jobs/jobs.module'
 import { RolesModule } from './roles/roles.module'
 import { UsersModule } from './users/users.module'
+import { SiteServicesModule } from './site-services/site-services.module'
 import { WorkersModule } from './workers/workers.module'
 
 @Module({
@@ -24,6 +25,7 @@ import { WorkersModule } from './workers/workers.module'
     JobsModule,
     RolesModule,
     BlogModule,
+    SiteServicesModule,
   ],
   controllers: [HealthController],
 })

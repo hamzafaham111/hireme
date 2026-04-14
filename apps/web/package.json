@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hire-me/site-icons": "*",
     "@hire-me/types": "*",
     "next": "^15.1.6",
     "react": "^19.0.0",

@@ -2,11 +2,11 @@
  * Single module for inline SVG icons used across marketing sections and the mobile tab bar.
  * Icons use `currentColor` so parents control tint via `text-*` classes.
  */
-import React, { type SVGProps } from 'react'
+import { type SVGProps } from 'react'
 
 export type SiteIconProps = SVGProps<SVGSVGElement>
 
-/** Same as `SiteIconProps` — kept for service card typings in `service-data.ts`. */
+/** Alias for service cards and inline marketing icons. */
 export type ServiceIconProps = SiteIconProps
 
 // ─── Mobile tab bar (compact, stroke 2) ─────────────────────────────────────

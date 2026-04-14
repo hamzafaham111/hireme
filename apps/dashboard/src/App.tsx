@@ -16,6 +16,8 @@ import { WorkerFormPage } from './pages/workers/WorkerFormPage'
 import { UserDetailPage } from './pages/users/UserDetailPage'
 import { UserFormPage } from './pages/users/UserFormPage'
 import { UsersListPage } from './pages/users/UsersListPage'
+import { SiteServiceFormPage } from './pages/site-services/SiteServiceFormPage'
+import { SiteServicesListPage } from './pages/site-services/SiteServicesListPage'
 import { WorkersListPage } from './pages/workers/WorkersListPage'
 import { ProtectedRoute } from './routes/ProtectedRoute'
 
@@ -53,6 +55,9 @@ export default function App() {
               <Route path="blog/new" element={<BlogFormPage />} />
               <Route path="blog/:postId/edit" element={<BlogFormPage />} />
               <Route path="blog" element={<BlogListPage />} />
+              <Route path="site-services/new" element={<SiteServiceFormPage />} />
+              <Route path="site-services/:serviceId/edit" element={<SiteServiceFormPage />} />
+              <Route path="site-services" element={<SiteServicesListPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

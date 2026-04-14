@@ -124,6 +124,27 @@ export function dashboardHeader(pathname: string): {
     }
   }
 
+  if (pathname === '/site-services/new') {
+    return {
+      title: 'Add site service',
+      subtitle: 'Card shown on the public homepage Services section',
+    }
+  }
+
+  if (/\/site-services\/[^/]+\/edit$/.test(pathname)) {
+    return {
+      title: 'Edit site service',
+      subtitle: 'Update title, icon, order, or visibility',
+    }
+  }
+
+  if (pathname.startsWith('/site-services')) {
+    return {
+      title: 'Site services',
+      subtitle: 'Homepage service cards on the public marketing site',
+    }
+  }
+
   return {
     title: 'Overview',
     subtitle: 'Hire Me — connect customers with workers',

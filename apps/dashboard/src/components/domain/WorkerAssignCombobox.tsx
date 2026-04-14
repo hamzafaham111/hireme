@@ -1,15 +1,7 @@
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type KeyboardEvent,
-} from 'react'
+import { useEffect, useState, type KeyboardEvent } from 'react'
 import type { Worker } from '@hire-me/types'
-
-const inputBase =
-  'w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-100 dark:focus:border-indigo-400'
+import { formInputClass } from '../../lib/formStyles'
+import { useSearchableCombobox } from '../ui/useSearchableCombobox'
 
 function filterWorkers(workers: Worker[], query: string): Worker[] {
   const q = query.trim().toLowerCase()
@@ -44,13 +36,11 @@ export function WorkerAssignCombobox({
   labelClassName,
   hint = 'Active workers only. Type to filter by name or Worker ID.',
 }: WorkerAssignComboboxProps) {
-  const listId = useId()
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState(() =>
     value === '—' ? '' : value,
   )
-  const [highlight, setHighlight] = useState(0)
+  const { listId, containerRef, open, setOpen, highlight, setHighlight, close } =
+    useSearchableCombobox(inputValue)
 
   const filtered = filterWorkers(activeWorkers, inputValue)
   type ListEntry =
@@ -64,24 +54,6 @@ export function WorkerAssignCombobox({
   useEffect(() => {
     if (!open) setInputValue(value === '—' ? '' : value)
   }, [value, open])
-
-  const close = useCallback(() => {
-    setOpen(false)
-    setHighlight(0)
-  }, [])
-
-  useEffect(() => {
-    if (!open) return
-    const onDoc = (e: MouseEvent) => {
-      if (!containerRef.current?.contains(e.target as Node)) close()
-    }
-    document.addEventListener('mousedown', onDoc)
-    return () => document.removeEventListener('mousedown', onDoc)
-  }, [open, close])
-
-  useEffect(() => {
-    setHighlight(0)
-  }, [inputValue])
 
   const pickNone = () => {
     onChange('—')
@@ -144,7 +116,7 @@ export function WorkerAssignCombobox({
         aria-controls={listId}
         aria-autocomplete="list"
         autoComplete="off"
-        className={inputBase}
+        className={formInputClass}
         placeholder="Search name or Worker ID…"
         value={inputValue}
         onChange={(e) => {

@@ -1,4 +1,12 @@
-import { IsIn, IsNumber, IsString, MinLength } from 'class-validator'
+import {
+  ArrayMinSize,
+  IsArray,
+  IsIn,
+  IsNumber,
+  IsString,
+  IsUUID,
+  MinLength,
+} from 'class-validator'
 
 const STATUSES = ['active', 'not-active', 'on-hold', 'canceled'] as const
 
@@ -19,9 +27,11 @@ export class CreateWorkerDto {
   @MinLength(1)
   location!: string
 
-  @IsString()
-  @MinLength(1)
-  service!: string
+  /** Catalog rows; `service` label is derived server-side from these titles. */
+  @IsArray()
+  @ArrayMinSize(1)
+  @IsUUID(undefined, { each: true })
+  siteServiceIds!: string[]
 
   @IsIn(STATUSES)
   status!: (typeof STATUSES)[number]

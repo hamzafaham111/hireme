@@ -8,6 +8,7 @@ const monorepoRoot = path.join(__dirname, '../..')
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  transpilePackages: ['@hire-me/site-icons'],
   images: {
     remotePatterns: [
       {

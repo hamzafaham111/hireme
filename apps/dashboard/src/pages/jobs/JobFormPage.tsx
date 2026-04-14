@@ -3,12 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { WorkerAssignCombobox } from '../../components/domain/WorkerAssignCombobox'
 import { Select } from '../../components/ui/Select'
 import { useOperationsData } from '../../context/OperationsDataContext'
+import { formInputClass, formLabelClass } from '../../lib/formStyles'
 import type { Job } from '@hire-me/types'
-
-const inputClass =
-  'w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-100 dark:focus:border-indigo-400'
-
-const labelClass = 'mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-200'
 
 const defaultForm = (): Omit<Job, 'id' | 'jobId'> => ({
   summary: '',
@@ -132,9 +128,9 @@ export function JobFormPage() {
         <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
           {isEdit && existing ? (
             <div className="sm:col-span-2">
-              <label className={labelClass}>Job ID</label>
+              <label className={formLabelClass}>Job ID</label>
               <input
-                className={`${inputClass} bg-slate-50 dark:bg-slate-800/50`}
+                className={`${formInputClass} bg-slate-50 dark:bg-slate-800/50`}
                 value={existing.jobId}
                 readOnly
               />
@@ -142,13 +138,13 @@ export function JobFormPage() {
           ) : null}
 
           <div className="sm:col-span-2">
-            <label className={labelClass} htmlFor="j-summary">
+            <label className={formLabelClass} htmlFor="j-summary">
               Request summary
             </label>
             <textarea
               id="j-summary"
               rows={3}
-              className={inputClass}
+              className={formInputClass}
               value={form.summary}
               onChange={(e) => update('summary', e.target.value)}
               placeholder="e.g. Driver at 1AM Dubai Marina → DXB"
@@ -156,24 +152,24 @@ export function JobFormPage() {
             />
           </div>
           <div>
-            <label className={labelClass} htmlFor="j-service">
+            <label className={formLabelClass} htmlFor="j-service">
               Service
             </label>
             <input
               id="j-service"
-              className={inputClass}
+              className={formInputClass}
               value={form.service}
               onChange={(e) => update('service', e.target.value)}
               required
             />
           </div>
           <div>
-            <label className={labelClass} htmlFor="j-area">
+            <label className={formLabelClass} htmlFor="j-area">
               Area
             </label>
             <input
               id="j-area"
-              className={inputClass}
+              className={formInputClass}
               value={form.area}
               onChange={(e) => update('area', e.target.value)}
               required
@@ -183,7 +179,7 @@ export function JobFormPage() {
             <Select
               id="j-status"
               label="Status"
-              labelClassName={labelClass}
+              labelClassName={formLabelClass}
               value={form.status}
               onChange={(v) => update('status', v as Job['status'])}
               options={[
@@ -199,7 +195,7 @@ export function JobFormPage() {
             value={form.assignedWorker}
             onChange={(v) => update('assignedWorker', v)}
             label="Assigned worker"
-            labelClassName={labelClass}
+            labelClassName={formLabelClass}
           />
         </div>
 

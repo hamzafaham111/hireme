@@ -1,11 +1,11 @@
 import type { FC } from 'react'
-import type { SiteIconProps } from '@/components/icons/site-icons'
+import type { SiteIconProps } from '@hire-me/site-icons'
 import {
   IconStatCalendar,
   IconStatStar,
   IconStatTasks,
   IconStatUsers,
-} from '@/components/icons/site-icons'
+} from '@hire-me/site-icons'
 import { SectionIntro } from '@/components/sections/shared'
 import { GridBackdrop } from '@/components/ui/grid-backdrop'
 

@@ -1,10 +1,6 @@
 import type { FC } from 'react'
-import type { SiteIconProps } from '@/components/icons/site-icons'
-import {
-  IconMapPin,
-  IconMessageSpark,
-  IconPhoto,
-} from '@/components/icons/site-icons'
+import type { SiteIconProps } from '@hire-me/site-icons'
+import { IconMapPin, IconMessageSpark, IconPhoto } from '@hire-me/site-icons'
 import { SectionIntro } from '@/components/sections/shared'
 import { WhatsAppButton } from '@/components/whatsapp'
 

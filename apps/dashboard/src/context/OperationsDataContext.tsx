@@ -7,7 +7,13 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import type { DashboardUser, Job, Worker } from '@hire-me/types'
+import type {
+  DashboardUser,
+  Job,
+  SiteService,
+  SiteServiceSavePayload,
+  Worker,
+} from '@hire-me/types'
 import { apiFetch } from '../lib/api'
 import { useAuth } from './AuthContext'
 
@@ -20,17 +26,25 @@ interface OperationsDataContextValue {
   workers: Worker[]
   jobs: Job[]
   users: DashboardUser[]
+  /** Homepage service cards (public site `#services`). */
+  siteServices: SiteService[]
   /** True while the first ops fetch after login is in flight. */
   loading: boolean
+  /** Set when the initial bundled ops fetch fails (workers/jobs/users/site services). */
+  opsError: string | null
+  clearOpsError: () => void
   getWorker: (id: string) => Worker | undefined
   getJob: (id: string) => Job | undefined
   getUser: (id: string) => DashboardUser | undefined
+  getSiteService: (id: string) => SiteService | undefined
   saveWorker: (worker: Worker) => Promise<Worker>
   saveJob: (job: Job) => Promise<Job>
   saveUser: (user: DashboardUser) => Promise<DashboardUser>
+  saveSiteService: (payload: SiteServiceSavePayload) => Promise<SiteService>
   deleteWorker: (id: string) => Promise<void>
   deleteJob: (id: string) => Promise<void>
   deleteUser: (id: string) => Promise<void>
+  deleteSiteService: (id: string) => Promise<void>
   createWorkerId: () => string
   createJobId: () => string
   createUserId: () => string
@@ -47,43 +61,68 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
   const [workers, setWorkers] = useState<Worker[]>([])
   const [jobs, setJobs] = useState<Job[]>([])
   const [users, setUsers] = useState<DashboardUser[]>([])
+  const [siteServices, setSiteServices] = useState<SiteService[]>([])
   const [loading, setLoading] = useState(false)
+  const [opsError, setOpsError] = useState<string | null>(null)
+
+  const clearOpsError = useCallback(() => setOpsError(null), [])
 
   useEffect(() => {
     if (!accessToken || !user) {
       setWorkers([])
       setJobs([])
       setUsers([])
+      setSiteServices([])
       setLoading(false)
+      setOpsError(null)
       return
     }
     if (user.role === 'content_editor') {
       setWorkers([])
       setJobs([])
       setUsers([])
+      setSiteServices([])
       setLoading(false)
+      setOpsError(null)
       return
     }
 
     let cancelled = false
     setLoading(true)
+    setOpsError(null)
     ;(async () => {
       try {
-        const [w, j, u] = await Promise.all([
+        const [w, j, u, s] = await Promise.all([
           apiFetch<Worker[]>('/workers', { token: accessToken }),
           apiFetch<Job[]>('/jobs', { token: accessToken }),
           apiFetch<Omit<DashboardUser, 'password'>[]>('/users', { token: accessToken }),
+          apiFetch<SiteService[]>('/site-services/admin', { token: accessToken }),
         ])
         if (!cancelled) {
-          setWorkers(w)
+          setWorkers(
+            w.map((row) => ({
+              ...row,
+              siteServiceIds:
+                row.siteServiceIds && row.siteServiceIds.length > 0
+                  ? row.siteServiceIds
+                  : row.siteServiceId
+                    ? [row.siteServiceId]
+                    : [],
+            })),
+          )
           setJobs(j)
           setUsers(u.map(withPasswordShell))
+          setSiteServices(Array.isArray(s) ? s : [])
         }
-      } catch {
+      } catch (e) {
         if (!cancelled) {
           setWorkers([])
           setJobs([])
           setUsers([])
+          setSiteServices([])
+          setOpsError(
+            e instanceof Error ? e.message : 'Could not load operations data.',
+          )
         }
       } finally {
         if (!cancelled) setLoading(false)
@@ -110,6 +149,11 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
     [users],
   )
 
+  const getSiteService = useCallback(
+    (id: string) => siteServices.find((s) => s.id === id),
+    [siteServices],
+  )
+
   const saveWorker = useCallback(
     async (worker: Worker) => {
       if (!accessToken) throw new Error('Not signed in.')
@@ -123,7 +167,7 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
             name: worker.name,
             phone: worker.phone,
             location: worker.location,
-            service: worker.service,
+            siteServiceIds: worker.siteServiceIds,
             status: worker.status,
             internalRating: worker.internalRating,
             customerRating: worker.customerRating,
@@ -140,7 +184,7 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
           name: worker.name,
           phone: worker.phone,
           location: worker.location,
-          service: worker.service,
+          siteServiceIds: worker.siteServiceIds,
           status: worker.status,
           internalRating: worker.internalRating,
           customerRating: worker.customerRating,
@@ -234,6 +278,39 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
     [accessToken, users],
   )
 
+  const saveSiteService = useCallback(
+    async (payload: SiteServiceSavePayload) => {
+      if (!accessToken) throw new Error('Not signed in.')
+      const body: Record<string, unknown> = {
+        title: payload.title,
+        shortDescription: payload.shortDescription,
+        iconKey: payload.iconKey,
+        sortOrder: payload.sortOrder,
+        isActive: payload.isActive,
+        iconImageUrl: payload.iconImageUrl,
+      }
+      if (payload.slug?.trim()) body.slug = payload.slug.trim()
+
+      if (payload.id) {
+        const updated = await apiFetch<SiteService>(`/site-services/${payload.id}`, {
+          method: 'PATCH',
+          token: accessToken,
+          body,
+        })
+        setSiteServices((prev) => prev.map((row) => (row.id === updated.id ? updated : row)))
+        return updated
+      }
+      const created = await apiFetch<SiteService>('/site-services', {
+        method: 'POST',
+        token: accessToken,
+        body,
+      })
+      setSiteServices((prev) => [...prev, created])
+      return created
+    },
+    [accessToken],
+  )
+
   const deleteWorker = useCallback(
     async (id: string) => {
       if (!accessToken) throw new Error('Not signed in.')
@@ -257,6 +334,15 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
       if (!accessToken) throw new Error('Not signed in.')
       await apiFetch(`/users/${id}`, { method: 'DELETE', token: accessToken })
       setUsers((prev) => prev.filter((u) => u.id !== id))
+    },
+    [accessToken],
+  )
+
+  const deleteSiteService = useCallback(
+    async (id: string) => {
+      if (!accessToken) throw new Error('Not signed in.')
+      await apiFetch(`/site-services/${id}`, { method: 'DELETE', token: accessToken })
+      setSiteServices((prev) => prev.filter((s) => s.id !== id))
     },
     [accessToken],
   )
@@ -286,16 +372,22 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
       workers,
       jobs,
       users,
+      siteServices,
       loading,
+      opsError,
+      clearOpsError,
       getWorker,
       getJob,
       getUser,
+      getSiteService,
       saveWorker,
       saveJob,
       saveUser,
+      saveSiteService,
       deleteWorker,
       deleteJob,
       deleteUser,
+      deleteSiteService,
       createWorkerId,
       createJobId,
       createUserId,
@@ -306,16 +398,22 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
       workers,
       jobs,
       users,
+      siteServices,
       loading,
+      opsError,
+      clearOpsError,
       getWorker,
       getJob,
       getUser,
+      getSiteService,
       saveWorker,
       saveJob,
       saveUser,
+      saveSiteService,
       deleteWorker,
       deleteJob,
       deleteUser,
+      deleteSiteService,
       createWorkerId,
       createJobId,
       createUserId,

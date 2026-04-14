@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hire-me/site-icons": "*",
     "@hire-me/types": "*",
     "@uiw/react-md-editor": "^4.0.11",
     "react": "^19.2.4",

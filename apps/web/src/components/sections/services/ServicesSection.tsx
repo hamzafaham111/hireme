@@ -1,7 +1,10 @@
 import { GridBackdrop } from '@/components/ui/grid-backdrop'
+import { fetchPublicSiteServices } from '@/lib/site-services-public'
 import { ServicesPanel } from './ServicesPanel'
 
-export function ServicesSection() {
+export async function ServicesSection() {
+  const services = await fetchPublicSiteServices()
+
   return (
     <section
       id="services"
@@ -9,7 +12,7 @@ export function ServicesSection() {
     >
       <GridBackdrop />
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <ServicesPanel />
+        <ServicesPanel services={services} />
       </div>
     </section>
   )

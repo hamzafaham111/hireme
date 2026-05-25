@@ -15,6 +15,7 @@ function makeWorkerRow(overrides: Partial<PrismaWorker>): PrismaWorker {
     service: 'Legacy label',
     siteServiceIds: [],
     siteServiceId: null,
+    userId: null,
     status: 'active',
     internalRating: 4,
     customerRating: 4,

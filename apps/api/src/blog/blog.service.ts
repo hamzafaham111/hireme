@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
@@ -12,7 +13,7 @@ import { slugify } from '../common/utils/slugify'
 import { CreateBlogPostDto } from './dto/create-blog-post.dto'
 import { UpdateBlogPostDto } from './dto/update-blog-post.dto'
 
-const BLOG_MANAGER_ROLES = ['superadmin', 'admin', 'content_editor'] as const
+const BLOG_MANAGER_ROLES = ['admin'] as const
 
 function isBlogManager(user: RequestUser | undefined): boolean {
   return Boolean(user && BLOG_MANAGER_ROLES.includes(user.role as (typeof BLOG_MANAGER_ROLES)[number]))
@@ -68,14 +69,17 @@ export class BlogService {
     throw new NotFoundException('Post not found.')
   }
 
-  async findOneForManagers(id: string) {
+  async findOneForManagers(id: string, viewer: RequestUser) {
+    if (!isBlogManager(viewer)) {
+      throw new ForbiddenException('Not allowed to manage blog posts.')
+    }
     const post = await this.prisma.blogPost.findUnique({ where: { id } })
     if (!post) throw new NotFoundException('Post not found.')
     return toApi(post)
   }
 
   private async ensureUniqueSlug(base: string): Promise<string> {
-    let slug = base || `post-${randomUUID().slice(0, 8)}`
+    const slug = base || `post-${randomUUID().slice(0, 8)}`
     const existing = await this.prisma.blogPost.findUnique({ where: { slug } })
     if (!existing) return slug
     return `${slug}-${randomUUID().slice(0, 8)}`
@@ -105,7 +109,10 @@ export class BlogService {
     return toApi(post)
   }
 
-  async update(id: string, dto: UpdateBlogPostDto, _editor: RequestUser) {
+  async update(id: string, dto: UpdateBlogPostDto, editor: RequestUser) {
+    if (!isBlogManager(editor)) {
+      throw new ForbiddenException('Not allowed to manage blog posts.')
+    }
     const existing = await this.prisma.blogPost.findUnique({ where: { id } })
     if (!existing) throw new NotFoundException('Post not found.')
 
@@ -152,7 +159,10 @@ export class BlogService {
     return toApi(post)
   }
 
-  async remove(id: string) {
+  async remove(id: string, editor: RequestUser) {
+    if (!isBlogManager(editor)) {
+      throw new ForbiddenException('Not allowed to manage blog posts.')
+    }
     const existing = await this.prisma.blogPost.findUnique({ where: { id } })
     if (!existing) throw new NotFoundException('Post not found.')
     await this.prisma.blogPost.delete({ where: { id } })

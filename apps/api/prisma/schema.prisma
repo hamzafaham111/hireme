@@ -8,10 +8,9 @@ datasource db {
 }
 
 enum DashboardRole {
-  superadmin
   admin
-  agent
-  content_editor
+  customer
+  worker
 }
 
 enum UserStatus {
@@ -39,13 +38,41 @@ enum BlogPostStatus {
   published
 }
 
+enum CustomerType {
+  individual
+  residential
+  commercial
+}
+
+enum WorkerApprovalStatus {
+  pending
+  approved
+  rejected
+  suspended
+}
+
 model User {
   id           String        @id @default(uuid())
+  phone        String?       @unique
   email        String        @unique
   passwordHash String        @map("password_hash")
   name         String
   role         DashboardRole
   status       UserStatus
+  
+  // Verification fields
+  phoneVerified Boolean       @default(false) @map("phone_verified")
+  emailVerified Boolean       @default(false) @map("email_verified")
+  
+  // SMS OTP fields
+  phoneOTP      String?       @map("phone_otp")
+  phoneOTPExpiry DateTime?    @map("phone_otp_expiry")
+  
+  // Worker approval (only for role=worker)
+  workerApproved Boolean      @default(false) @map("worker_approved")
+  approvedAt     DateTime?    @map("approved_at")
+  approvedBy     String?      @map("approved_by")
+  
   /** Set when an operator shares browser geolocation from the dashboard map page. */
   lastLatitude      Float?    @map("last_latitude")
   lastLongitude     Float?    @map("last_longitude")
@@ -54,8 +81,40 @@ model User {
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt @map("updated_at")
   blogPosts    BlogPost[]
+  /** Marketplace worker profile linked to this login (optional until claimed). */
+  workerProfile Worker?      @relation("WorkerUser")
+  /** Customer profile for customer users. */
+  customerProfile Customer?  @relation("CustomerProfile")
+  /** Jobs created by this customer account. */
+  customerJobs  Job[]        @relation("JobCustomer")
 
   @@map("users")
+}
+
+model Customer {
+  id                String        @id @default(uuid())
+  userId            String?       @unique @map("user_id")
+  user              User?         @relation("CustomerProfile", fields: [userId], references: [id], onDelete: SetNull)
+  
+  // Business profile
+  preferredLocation String?       @map("preferred_location")
+  preferredServices String[]      @default([]) @map("preferred_services")
+  customerType      CustomerType  @default(individual) @map("customer_type")
+  
+  // Analytics
+  totalJobsPosted   Int           @default(0) @map("total_jobs_posted")
+  totalSpent        Decimal       @default(0) @map("total_spent") @db.Decimal(10, 2)
+  reputationScore   Float         @default(0) @map("reputation_score")
+  
+  // Contact preferences
+  billingAddress    String?       @map("billing_address")
+  communicationPref String        @default("whatsapp") @map("communication_pref")
+  
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("customers")
 }
 
 model Worker {
@@ -74,24 +133,46 @@ model Worker {
   /** Backward-compatible primary catalog link (first item from `siteServiceIds`). */
   siteServiceId    String?       @map("site_service_id")
   siteService      SiteService?  @relation(fields: [siteServiceId], references: [id], onDelete: SetNull)
+  /** Optional link to marketplace login (`role = worker`). */
+  userId           String?       @unique @map("user_id")
+  user             User?         @relation("WorkerUser", fields: [userId], references: [id], onDelete: SetNull)
+  
+  // Worker approval fields (moved from User table)
+  approvalStatus    WorkerApprovalStatus @default(pending) @map("approval_status")
+  approvedAt        DateTime?            @map("approved_at")
+  approvedBy        String?              @map("approved_by")
+  rejectionReason   String?              @map("rejection_reason")
+  
   createdAt        DateTime      @default(now()) @map("created_at")
   updatedAt        DateTime      @updatedAt @map("updated_at")
 
   @@index([siteServiceId])
+  @@index([userId])
   @@map("workers")
 }
 
 model Job {
-  id              String    @id @default(uuid())
-  jobId           String    @unique @map("job_id")
-  summary         String
-  service         String
-  area            String
-  status          JobStatus
-  assignedWorker  String    @map("assigned_worker")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  id               String    @id @default(uuid())
+  jobId            String    @unique @map("job_id")
+  summary          String
+  service          String
+  area             String
+  status           JobStatus
+  assignedWorker   String    @map("assigned_worker")
+  /** Customer who created this job from the web app (optional for legacy ops-created jobs). */
+  customerUserId   String?   @map("customer_user_id")
+  customerUser     User?     @relation("JobCustomer", fields: [customerUserId], references: [id], onDelete: SetNull)
+  /** Job site location for geo matching (optional). */
+  latitude         Float?    @map("latitude")
+  longitude        Float?    @map("longitude")
+  /** Catalog service for filtering (optional; falls back to `service` label). */
+  siteServiceId    String?   @map("site_service_id")
+  siteService      SiteService? @relation(fields: [siteServiceId], references: [id], onDelete: SetNull)
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
 
+  @@index([customerUserId])
+  @@index([siteServiceId])
   @@map("jobs")
 }
 
@@ -128,6 +209,7 @@ model SiteService {
   createdAt        DateTime @default(now()) @map("created_at")
   updatedAt        DateTime @updatedAt @map("updated_at")
   workers          Worker[]
+  jobs             Job[]
 
   @@index([isActive, sortOrder])
   @@map("site_services")

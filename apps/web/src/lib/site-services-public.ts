@@ -13,14 +13,14 @@ async function parseJson<T>(res: Response): Promise<T | null> {
 }
 
 /**
- * Active site service cards for the homepage (no auth).
+ * Active site service cards for the homepage (no auth — `GET .../site-services/public`).
  * Fails soft when the API is unreachable (e.g. build without API).
  */
 export async function fetchPublicSiteServices(): Promise<SiteService[]> {
   const base = getPublicApiBaseUrl()
   if (!base) return []
   try {
-    const res = await fetch(`${base}/site-services`, {
+    const res = await fetch(`${base}/site-services/public`, {
       next: { revalidate: 60 },
     })
     if (!res.ok) return []

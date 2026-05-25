@@ -10,7 +10,10 @@ import { TestimonialsSection } from '@/components/sections/testimonials'
 import { WhatsAppInfoSection } from '@/components/sections/whatsapp-info'
 import { WhyUsSection } from '@/components/sections/why-us'
 
-export default function HomePage() {
+/** ISR: aligns with `fetch` revalidate in blog / site-services helpers. */
+export const revalidate = 60
+
+export default async function HomePage() {
   return (
     <>
       <HeroSection />

@@ -6,12 +6,13 @@
     "dev": "next dev",
     "dev:turbo": "next dev --turbopack",
     "clean": "rm -rf .next",
-    "prebuild": "npm run build -w @hire-me/types",
+    "prebuild": "npm run build -w @hire-me/types && npm run build -w @hire-me/api-client",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@hire-me/api-client": "*",
     "@hire-me/site-icons": "*",
     "@hire-me/types": "*",
     "next": "^15.1.6",

@@ -34,6 +34,48 @@ export const MOBILE_TAB_ITEMS: readonly {
   { href: '#', label: 'Chat', id: 'chat', isWhatsApp: true },
 ] as const
 
+/** Mobile tabs when browsing logged-in customer routes (`MobileTabBar`). */
+export const CUSTOMER_MOBILE_TAB_ITEMS: readonly {
+  readonly href: string
+  readonly label: string
+  readonly id: 'home' | 'services' | 'blog' | 'chat'
+  readonly isWhatsApp?: true
+  readonly match?: (pathname: string) => boolean
+}[] = [
+  {
+    href: '/customer',
+    label: 'Home',
+    id: 'home',
+    match: (p) => p === '/customer' || p === '/customer/',
+  },
+  {
+    href: '/customer/jobs',
+    label: 'Jobs',
+    id: 'services',
+    match: (p) => p.startsWith('/customer/jobs'),
+  },
+  { href: '/blog', label: 'Blog', id: 'blog', match: (p) => p.startsWith('/blog') },
+  { href: '#', label: 'Chat', id: 'chat', isWhatsApp: true },
+] as const
+
+/** Mobile tabs for worker marketplace routes. */
+export const WORKER_MOBILE_TAB_ITEMS: readonly {
+  readonly href: string
+  readonly label: string
+  readonly id: 'services' | 'blog' | 'chat'
+  readonly isWhatsApp?: true
+  readonly match?: (pathname: string) => boolean
+}[] = [
+  {
+    href: '/worker',
+    label: 'Jobs',
+    id: 'services',
+    match: (p) => p === '/worker' || p === '/worker/' || p.startsWith('/worker/'),
+  },
+  { href: '/blog', label: 'Blog', id: 'blog', match: (p) => p.startsWith('/blog') },
+  { href: '#', label: 'Chat', id: 'chat', isWhatsApp: true },
+] as const
+
 export type FooterLink = { readonly href: string; readonly label: string }
 
 export const FOOTER_LINK_GROUPS: {

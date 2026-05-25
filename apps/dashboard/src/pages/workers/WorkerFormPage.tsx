@@ -2,7 +2,7 @@ import { type FormEvent, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { SiteServicePickCombobox } from '../../components/domain/SiteServicePickCombobox'
 import { Select } from '../../components/ui/Select'
-import { useOperationsData } from '../../context/OperationsDataContext'
+import { useOperationsData } from '../../providers/OperationsDataContext'
 import { formInputClass, formLabelClass } from '../../lib/formStyles'
 import type { Worker } from '@hire-me/types'
 
@@ -14,6 +14,7 @@ const defaultForm = (): Omit<Worker, 'id' | 'workerId'> => ({
   siteServiceId: null,
   siteServiceIds: [],
   status: 'active',
+  approvalStatus: 'pending',
   internalRating: 4,
   customerRating: 4,
 })
@@ -43,6 +44,7 @@ export function WorkerFormPage() {
           siteServiceId: existing.siteServiceId,
           siteServiceIds: existing.siteServiceIds ?? (existing.siteServiceId ? [existing.siteServiceId] : []),
           status: existing.status,
+          approvalStatus: existing.approvalStatus,
           internalRating: existing.internalRating,
           customerRating: existing.customerRating,
         }
@@ -50,6 +52,7 @@ export function WorkerFormPage() {
   )
 
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
 
   useEffect(() => {
     if (isEdit && workerId) {
@@ -63,6 +66,7 @@ export function WorkerFormPage() {
           siteServiceId: w.siteServiceId,
           siteServiceIds: w.siteServiceIds ?? (w.siteServiceId ? [w.siteServiceId] : []),
           status: w.status,
+          approvalStatus: w.approvalStatus,
           internalRating: w.internalRating,
           customerRating: w.customerRating,
         })
@@ -77,6 +81,7 @@ export function WorkerFormPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setError(null)
+    setSuccess(null)
     const intR = Number(form.internalRating)
     const custR = Number(form.customerRating)
     if (Number.isNaN(intR) || intR < 0 || intR > 5) {
@@ -100,7 +105,7 @@ export function WorkerFormPage() {
           internalRating: intR,
           customerRating: custR,
         })
-        navigate('/workers', { replace: true })
+        setSuccess('Worker updated successfully.')
         return
       }
 
@@ -151,6 +156,15 @@ export function WorkerFormPage() {
             role="alert"
           >
             {error}
+          </p>
+        ) : null}
+
+        {success ? (
+          <p
+            className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-200"
+            role="status"
+          >
+            {success}
           </p>
         ) : null}
 
@@ -242,7 +256,21 @@ export function WorkerFormPage() {
               ]}
             />
           </div>
-          <div className="hidden sm:block" aria-hidden />
+          <div>
+            <Select
+              id="w-approval-status"
+              label="Approval status"
+              labelClassName={formLabelClass}
+              value={form.approvalStatus}
+              onChange={(v) => update('approvalStatus', v as Worker['approvalStatus'])}
+              options={[
+                { value: 'pending', label: 'Pending' },
+                { value: 'approved', label: 'Approved' },
+                { value: 'rejected', label: 'Rejected' },
+                { value: 'suspended', label: 'Suspended' },
+              ]}
+            />
+          </div>
           <div>
             <label className={formLabelClass} htmlFor="w-int">
               Internal rating (0–5)

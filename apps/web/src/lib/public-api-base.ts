@@ -32,3 +32,4 @@ export function getPublicApiBaseUrl(): string | null {
 
   return DEFAULT_LOCAL_API
 }
+

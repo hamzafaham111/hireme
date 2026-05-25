@@ -7,9 +7,11 @@ import {
   IsString,
   IsUUID,
   MinLength,
+  ValidateIf,
 } from 'class-validator'
 
 const STATUSES = ['active', 'not-active', 'on-hold', 'canceled'] as const
+const APPROVAL_STATUSES = ['pending', 'approved', 'rejected', 'suspended'] as const
 
 export class UpdateWorkerDto {
   @IsOptional()
@@ -44,10 +46,19 @@ export class UpdateWorkerDto {
   status?: (typeof STATUSES)[number]
 
   @IsOptional()
+  @IsIn(APPROVAL_STATUSES)
+  approvalStatus?: (typeof APPROVAL_STATUSES)[number]
+
+  @IsOptional()
   @IsNumber()
   internalRating?: number
 
   @IsOptional()
   @IsNumber()
   customerRating?: number
+
+  @IsOptional()
+  @ValidateIf((_, v) => v !== null && v !== undefined)
+  @IsUUID()
+  userId?: string | null
 }

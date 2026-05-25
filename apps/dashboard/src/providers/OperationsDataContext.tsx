@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react'
 import type {
+  Customer,
   DashboardUser,
   Job,
   SiteService,
@@ -26,6 +27,7 @@ interface OperationsDataContextValue {
   workers: Worker[]
   jobs: Job[]
   users: DashboardUser[]
+  customers: Customer[]
   /** Homepage service cards (public site `#services`). */
   siteServices: SiteService[]
   /** True while the first ops fetch after login is in flight. */
@@ -36,10 +38,12 @@ interface OperationsDataContextValue {
   getWorker: (id: string) => Worker | undefined
   getJob: (id: string) => Job | undefined
   getUser: (id: string) => DashboardUser | undefined
+  getCustomer: (id: string) => Customer | undefined
   getSiteService: (id: string) => SiteService | undefined
   saveWorker: (worker: Worker) => Promise<Worker>
   saveJob: (job: Job) => Promise<Job>
   saveUser: (user: DashboardUser) => Promise<DashboardUser>
+  saveCustomer: (customer: Customer) => Promise<Customer>
   saveSiteService: (payload: SiteServiceSavePayload) => Promise<SiteService>
   deleteWorker: (id: string) => Promise<void>
   deleteJob: (id: string) => Promise<void>
@@ -61,6 +65,7 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
   const [workers, setWorkers] = useState<Worker[]>([])
   const [jobs, setJobs] = useState<Job[]>([])
   const [users, setUsers] = useState<DashboardUser[]>([])
+  const [customers, setCustomers] = useState<Customer[]>([])
   const [siteServices, setSiteServices] = useState<SiteService[]>([])
   const [loading, setLoading] = useState(false)
   const [opsError, setOpsError] = useState<string | null>(null)
@@ -72,15 +77,17 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
       setWorkers([])
       setJobs([])
       setUsers([])
+      setCustomers([])
       setSiteServices([])
       setLoading(false)
       setOpsError(null)
       return
     }
-    if (user.role === 'content_editor') {
+    if (user.role !== 'admin') {
       setWorkers([])
       setJobs([])
       setUsers([])
+      setCustomers([])
       setSiteServices([])
       setLoading(false)
       setOpsError(null)
@@ -92,11 +99,12 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
     setOpsError(null)
     ;(async () => {
       try {
-        const [w, j, u, s] = await Promise.all([
+        const [w, j, u, c, s] = await Promise.all([
           apiFetch<Worker[]>('/workers', { token: accessToken }),
           apiFetch<Job[]>('/jobs', { token: accessToken }),
           apiFetch<Omit<DashboardUser, 'password'>[]>('/users', { token: accessToken }),
-          apiFetch<SiteService[]>('/site-services/admin', { token: accessToken }),
+          apiFetch<Customer[]>('/customers', { token: accessToken }),
+          apiFetch<SiteService[]>('/site-services', { token: accessToken }),
         ])
         if (!cancelled) {
           setWorkers(
@@ -112,6 +120,7 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
           )
           setJobs(j)
           setUsers(u.map(withPasswordShell))
+          setCustomers(c)
           setSiteServices(Array.isArray(s) ? s : [])
         }
       } catch (e) {
@@ -119,6 +128,7 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
           setWorkers([])
           setJobs([])
           setUsers([])
+          setCustomers([])
           setSiteServices([])
           setOpsError(
             e instanceof Error ? e.message : 'Could not load operations data.',
@@ -154,6 +164,11 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
     [siteServices],
   )
 
+  const getCustomer = useCallback(
+    (id: string) => customers.find((c) => c.id === id),
+    [customers],
+  )
+
   const saveWorker = useCallback(
     async (worker: Worker) => {
       if (!accessToken) throw new Error('Not signed in.')
@@ -169,6 +184,7 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
             location: worker.location,
             siteServiceIds: worker.siteServiceIds,
             status: worker.status,
+            approvalStatus: worker.approvalStatus,
             internalRating: worker.internalRating,
             customerRating: worker.customerRating,
           },
@@ -186,6 +202,7 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
           location: worker.location,
           siteServiceIds: worker.siteServiceIds,
           status: worker.status,
+          approvalStatus: worker.approvalStatus,
           internalRating: worker.internalRating,
           customerRating: worker.customerRating,
         },
@@ -276,6 +293,32 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
       return next
     },
     [accessToken, users],
+  )
+
+  const saveCustomer = useCallback(
+    async (customer: Customer) => {
+      if (!accessToken) throw new Error('Not signed in.')
+      // Customers are only updated, never created from dashboard
+      const existsOnServer = customers.some((c) => c.id === customer.id)
+      if (!existsOnServer) {
+        throw new Error('Customers can only be created via marketplace registration.')
+      }
+      
+      const updated = await apiFetch<Customer>(`/customers/${customer.id}`, {
+        method: 'PATCH',
+        token: accessToken,
+        body: {
+          customerType: customer.customerType,
+          preferredLocation: customer.preferredLocation,
+          preferredServices: customer.preferredServices,
+          billingAddress: customer.billingAddress,
+          communicationPref: customer.communicationPref,
+        },
+      })
+      setCustomers((prev) => prev.map((c) => (c.id === updated.id ? updated : c)))
+      return updated
+    },
+    [accessToken, customers],
   )
 
   const saveSiteService = useCallback(
@@ -372,6 +415,7 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
       workers,
       jobs,
       users,
+      customers,
       siteServices,
       loading,
       opsError,
@@ -379,10 +423,12 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
       getWorker,
       getJob,
       getUser,
+      getCustomer,
       getSiteService,
       saveWorker,
       saveJob,
       saveUser,
+      saveCustomer,
       saveSiteService,
       deleteWorker,
       deleteJob,
@@ -398,6 +444,7 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
       workers,
       jobs,
       users,
+      customers,
       siteServices,
       loading,
       opsError,
@@ -405,10 +452,12 @@ export function OperationsDataProvider({ children }: { children: ReactNode }) {
       getWorker,
       getJob,
       getUser,
+      getCustomer,
       getSiteService,
       saveWorker,
       saveJob,
       saveUser,
+      saveCustomer,
       saveSiteService,
       deleteWorker,
       deleteJob,

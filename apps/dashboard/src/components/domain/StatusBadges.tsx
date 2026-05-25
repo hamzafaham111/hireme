@@ -27,6 +27,34 @@ export function WorkerStatusBadge({ status }: { status: Worker['status'] }) {
   )
 }
 
+export function WorkerApprovalStatusBadge({ status }: { status: Worker['approvalStatus'] }) {
+  const map = {
+    pending:
+      'bg-amber-100 text-amber-900 dark:bg-amber-950/50 dark:text-amber-200',
+    approved:
+      'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300',
+    rejected:
+      'bg-rose-100 text-rose-800 dark:bg-rose-950/50 dark:text-rose-200',
+    suspended:
+      'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300',
+  } as const
+  const label =
+    status === 'pending'
+      ? 'Pending'
+      : status === 'approved'
+        ? 'Approved'
+        : status === 'rejected'
+          ? 'Rejected'
+          : 'Suspended'
+  return (
+    <span
+      className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${map[status]}`}
+    >
+      {label}
+    </span>
+  )
+}
+
 export function JobStatusBadge({ status }: { status: Job['status'] }) {
   const styles = {
     pending:

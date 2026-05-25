@@ -1,6 +1,6 @@
 import { IsEmail, IsIn, IsOptional, IsString, MinLength } from 'class-validator'
 
-const ROLES = ['superadmin', 'admin', 'agent', 'content_editor'] as const
+const ROLES = ['admin', 'customer', 'worker'] as const
 const STATUSES = ['active', 'invited'] as const
 
 export class UpdateUserDto {

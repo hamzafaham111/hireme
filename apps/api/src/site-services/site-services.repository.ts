@@ -54,7 +54,7 @@ export class SiteServicesRepository {
   }
 
   private async ensureUniqueSlug(base: string): Promise<string> {
-    let slug = base || `service-${randomUUID().slice(0, 8)}`
+    const slug = base || `service-${randomUUID().slice(0, 8)}`
     const existing = await this.prisma.siteService.findUnique({ where: { slug } })
     if (!existing) return slug
     return `${slug}-${randomUUID().slice(0, 8)}`

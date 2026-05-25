@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { JobStatusBadge } from '../../components/domain/StatusBadges'
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog'
-import { useOperationsData } from '../../context/OperationsDataContext'
+import { useOperationsData } from '../../providers/OperationsDataContext'
 
 const actionBtn =
   'rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm transition-colors'

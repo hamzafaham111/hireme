@@ -24,7 +24,7 @@ const WORKERS: Array<{
     name: 'Omar Al-Farsi',
     phone: '+971 50 111 2233',
     location: 'Dubai Marina',
-    service: 'Driver',
+    service: 'Car & motor errands',
     status: 'active',
     internalRating: 4.8,
     customerRating: 4.9,
@@ -82,7 +82,7 @@ const JOBS: Array<{
   {
     jobId: 'HM-J-5001',
     summary: 'Driver at 1:00 AM, airport pickup',
-    service: 'Driver',
+    service: 'Car & motor errands',
     area: 'Dubai',
     status: 'pending',
     assignedWorker: '—',
@@ -270,7 +270,7 @@ async function main() {
       email: 'alex@hireme.internal',
       passwordHash,
       name: 'Alex Morgan',
-      role: 'superadmin',
+      role: 'admin',
       status: 'active' as UserStatus,
     },
   })
@@ -288,7 +288,7 @@ async function main() {
       email: 'chris@hireme.internal',
       passwordHash,
       name: 'Chris Lee',
-      role: 'agent',
+      role: 'admin',
       status: 'invited',
     },
   })
@@ -297,11 +297,33 @@ async function main() {
       email: 'jamie@hireme.internal',
       passwordHash,
       name: 'Jamie Rivera',
-      role: 'content_editor',
+      role: 'admin',
       status: 'active',
     },
   })
 
+  const demoCustomer = await prisma.user.create({
+    data: {
+      email: 'customer@hireme.internal',
+      passwordHash,
+      name: 'Demo Customer',
+      role: 'customer',
+      status: 'active',
+    },
+  })
+  const demoWorkerUser = await prisma.user.create({
+    data: {
+      email: 'worker@hireme.internal',
+      passwordHash,
+      name: 'Demo Worker Login',
+      role: 'worker',
+      status: 'active',
+      lastLatitude: 25.0772,
+      lastLongitude: 55.1398,
+      lastLocationLabel: 'Dubai Marina',
+      lastLocationAt: new Date(),
+    },
+  })
   for (let i = 0; i < SITE_SERVICES_SEED.length; i++) {
     const s = SITE_SERVICES_SEED[i]
     const n = i + 1
@@ -327,17 +349,30 @@ async function main() {
 
   for (const w of WORKERS) {
     const siteServiceId = servicesByTitle.get(w.service) ?? null
+    const isDemoWorker = w.workerId === 'HM-W-1042'
     await prisma.worker.create({
       data: {
         ...w,
         siteServiceIds: siteServiceId ? [siteServiceId] : [],
         siteServiceId,
+        ...(isDemoWorker ? { userId: demoWorkerUser.id } : {}),
       },
     })
   }
   for (const j of JOBS) {
     await prisma.job.create({ data: j })
   }
+
+  const driverServiceId = servicesByTitle.get('Car & motor errands')
+  await prisma.job.update({
+    where: { jobId: 'HM-J-5001' },
+    data: {
+      latitude: 25.0772,
+      longitude: 55.1398,
+      ...(driverServiceId ? { siteServiceId: driverServiceId } : {}),
+      customerUserId: demoCustomer.id,
+    },
+  })
 
   const now = new Date()
   await prisma.blogPost.create({
@@ -366,7 +401,9 @@ async function main() {
     },
   })
 
-  console.info('Seed complete. Demo login: alex@hireme.internal / demo123 (and other seed users).')
+  console.info(
+    'Seed complete. Admin: alex@hireme.internal / demo123 · Web customer: customer@hireme.internal · Web worker: worker@hireme.internal',
+  )
 }
 
 main()

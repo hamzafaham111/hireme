@@ -2,7 +2,7 @@ import { type FormEvent, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { WorkerAssignCombobox } from '../../components/domain/WorkerAssignCombobox'
 import { Select } from '../../components/ui/Select'
-import { useOperationsData } from '../../context/OperationsDataContext'
+import { useOperationsData } from '../../providers/OperationsDataContext'
 import { formInputClass, formLabelClass } from '../../lib/formStyles'
 import type { Job } from '@hire-me/types'
 

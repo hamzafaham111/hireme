@@ -1,10 +1,13 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext'
-import { BlogDataProvider } from './context/BlogDataContext'
-import { OperationsDataProvider } from './context/OperationsDataContext'
+import { AuthProvider } from './providers/AuthContext'
+import { BlogDataProvider } from './providers/BlogDataContext'
+import { OperationsDataProvider } from './providers/OperationsDataContext'
 import DashboardShell from './layouts/DashboardShell'
 import { BlogFormPage } from './pages/blog/BlogFormPage'
 import { BlogListPage } from './pages/blog/BlogListPage'
+import { CustomerDetailPage } from './pages/customers/CustomerDetailPage'
+import { CustomerFormPage } from './pages/customers/CustomerFormPage'
+import { CustomersListPage } from './pages/customers/CustomersListPage'
 import { LoginPage } from './pages/LoginPage'
 import { OverviewPage } from './pages/OverviewPage'
 import { RolesPage } from './pages/RolesPage'
@@ -43,6 +46,9 @@ export default function App() {
               <Route path="users/:userId/edit" element={<UserFormPage />} />
               <Route path="users/:userId" element={<UserDetailPage />} />
               <Route path="users" element={<UsersListPage />} />
+              <Route path="customers/:customerId/edit" element={<CustomerFormPage />} />
+              <Route path="customers/:customerId" element={<CustomerDetailPage />} />
+              <Route path="customers" element={<CustomersListPage />} />
               <Route path="workers/new" element={<WorkerFormPage />} />
               <Route path="workers/:workerId/edit" element={<WorkerFormPage />} />
               <Route path="workers/:workerId" element={<WorkerDetailPage />} />

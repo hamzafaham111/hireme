@@ -15,37 +15,34 @@ import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UsersService } from './users.service'
 
+/** Dashboard-only: user directory CRUD (see `docs/API_AUTH_MATRIX.md`). */
 @Controller('users')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles('admin')
 export class UsersController {
   constructor(private readonly users: UsersService) {}
 
   @Get()
-  @Roles('superadmin', 'admin', 'agent')
   findAll() {
     return this.users.findAll()
   }
 
   @Get(':id')
-  @Roles('superadmin', 'admin', 'agent')
   findOne(@Param('id') id: string) {
     return this.users.findOne(id)
   }
 
   @Post()
-  @Roles('superadmin', 'admin')
   create(@Body() dto: CreateUserDto) {
     return this.users.create(dto)
   }
 
   @Patch(':id')
-  @Roles('superadmin', 'admin')
   update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     return this.users.update(id, dto)
   }
 
   @Delete(':id')
-  @Roles('superadmin', 'admin')
   remove(@Param('id') id: string) {
     return this.users.remove(id)
   }

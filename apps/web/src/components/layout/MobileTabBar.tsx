@@ -5,7 +5,11 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type MouseEvent } from 'react'
 import { scrollToHomeHash } from '@/lib/scroll-home-hash'
 import { MOBILE_TAB_ICONS } from '@hire-me/site-icons'
-import { MOBILE_TAB_ITEMS } from '@/lib/site-nav'
+import {
+  CUSTOMER_MOBILE_TAB_ITEMS,
+  MOBILE_TAB_ITEMS,
+  WORKER_MOBILE_TAB_ITEMS,
+} from '@/lib/site-nav'
 import { whatsappHref } from '@/lib/site'
 
 /** WhatsApp brand on the tab (icon uses fill/stroke currentColor). */
@@ -73,12 +77,80 @@ function tabFromUrl(pathname: string, hash: string): MobileTabId | null {
 const tabShell =
   'flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-lg py-2 text-[10px] font-semibold outline-none transition-colors duration-200 ease-out'
 
+type MarketplaceTabItem = {
+  readonly href: string
+  readonly label: string
+  readonly id: keyof typeof MOBILE_TAB_ICONS
+  readonly isWhatsApp?: true
+  readonly match?: (pathname: string) => boolean
+}
+
+function MarketplaceMobileTabBar({
+  items,
+  pathname,
+}: {
+  items: readonly MarketplaceTabItem[]
+  pathname: string
+}) {
+  const inactive =
+    'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+  const activeCls = 'text-brand-600 dark:text-brand-400'
+
+  return (
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200/90 bg-white/95 pb-[env(safe-area-inset-bottom,0px)] shadow-[0_-4px_24px_-8px_rgba(15,23,42,0.12)] backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/95 dark:shadow-[0_-4px_24px_-8px_rgba(0,0,0,0.4)] md:hidden"
+      aria-label="Primary mobile"
+    >
+      <ul className="mx-auto flex max-w-lg items-stretch justify-around px-1 pt-1">
+        {items.map((item) => {
+          const Icon = MOBILE_TAB_ICONS[item.id]
+          const active =
+            !item.isWhatsApp &&
+            (item.match ? item.match(pathname) : pathname === item.href)
+
+          if (item.isWhatsApp) {
+            return (
+              <li key={`${item.id}-wa`} className="flex min-w-0 flex-1 justify-center">
+                <a
+                  href={whatsappHref()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${tabShell} ${WHATSAPP_TAB_CLASS} focus-visible:ring-2 focus-visible:ring-[#25D366]/40`}
+                >
+                  <Icon className="size-6 shrink-0" />
+                  <span>{item.label}</span>
+                </a>
+              </li>
+            )
+          }
+
+          return (
+            <li key={item.href} className="flex min-w-0 flex-1 justify-center">
+              <Link
+                href={item.href}
+                className={`${tabShell} focus-visible:ring-2 focus-visible:ring-brand-500/40 ${
+                  active ? activeCls : inactive
+                }`}
+                aria-current={active ? 'page' : undefined}
+              >
+                <Icon className={`size-6 shrink-0 ${active ? activeCls : inactive}`} />
+                <span className="truncate">{item.label}</span>
+              </Link>
+            </li>
+          )
+        })}
+      </ul>
+    </nav>
+  )
+}
+
 /**
  * App-style bottom navigation — visible only below `md`.
  */
 export function MobileTabBar() {
   const pathname = usePathname() ?? ''
   const router = useRouter()
+
   const hash = useLocationHashForTabs(pathname)
 
   const [pressedTabId, setPressedTabId] = useState<MobileTabId | null>(null)
@@ -146,6 +218,23 @@ export function MobileTabBar() {
     }
     if (window.location.hash) stripHashFromUrl()
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  if (pathname.startsWith('/customer')) {
+    return (
+      <MarketplaceMobileTabBar
+        items={CUSTOMER_MOBILE_TAB_ITEMS as readonly MarketplaceTabItem[]}
+        pathname={pathname}
+      />
+    )
+  }
+  if (pathname.startsWith('/worker')) {
+    return (
+      <MarketplaceMobileTabBar
+        items={WORKER_MOBILE_TAB_ITEMS as readonly MarketplaceTabItem[]}
+        pathname={pathname}
+      />
+    )
   }
 
   return (

@@ -14,12 +14,15 @@
     "clean:web": "npm run clean --workspace=@hire-me/web",
     "dev:api": "npm run dev --prefix apps/api",
     "build:api": "npm run build --prefix apps/api",
+    "lint:api": "npm run lint --prefix apps/api",
+    "test:api": "npm run test --prefix apps/api",
     "build": "npm run build --workspaces --if-present",
     "build:dashboard": "npm run build --workspace=@hire-me/dashboard",
     "build:web": "npm run build --workspace=@hire-me/web",
     "lint": "npm run lint --workspaces --if-present",
     "lint:dashboard": "npm run lint --workspace=@hire-me/dashboard",
-    "lint:web": "npm run lint --workspace=@hire-me/web"
+    "lint:web": "npm run lint --workspace=@hire-me/web",
+    "lint:all": "npm run lint --workspaces --if-present"
   },
   "engines": {
     "node": ">=20"

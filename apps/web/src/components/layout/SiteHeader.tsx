@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useId } from 'react'
 import { HeaderServiceLocation } from '@/components/layout/HeaderServiceLocation'
+import { SiteHeaderAccount } from '@/components/layout/SiteHeaderAccount'
 import { WhatsAppButton } from '@/components/whatsapp'
 import { PRIMARY_NAV } from '@/lib/site-nav'
 import { siteName } from '@/lib/site'
@@ -93,9 +94,12 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <WhatsAppButton className="!gap-1.5 !border !border-[#25D366] !bg-transparent !px-3 !py-1.5 !text-xs !text-[#25D366] !shadow-none transition-colors hover:!bg-[#25D366]/10 hover:!text-[#1da851] hover:!shadow-none dark:hover:!bg-[#25D366]/15 sm:!gap-2 sm:!px-5 sm:!text-sm">
-            WhatsApp
-          </WhatsAppButton>
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <WhatsAppButton className="!gap-1.5 !border !border-[#25D366] !bg-transparent !px-3 !py-1.5 !text-xs !text-[#25D366] !shadow-none transition-colors hover:!bg-[#25D366]/10 hover:!text-[#1da851] hover:!shadow-none dark:hover:!bg-[#25D366]/15 sm:!gap-2 sm:!px-5 sm:!text-sm">
+              WhatsApp
+            </WhatsAppButton>
+            <SiteHeaderAccount />
+          </div>
         </div>
         <div>
         <form

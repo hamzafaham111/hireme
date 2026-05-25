@@ -1,8 +1,8 @@
 import { type FormEvent, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Select } from '../../components/ui/Select'
-import { useAuth } from '../../context/AuthContext'
-import { useOperationsData } from '../../context/OperationsDataContext'
+import { useAuth } from '../../providers/AuthContext'
+import { useOperationsData } from '../../providers/OperationsDataContext'
 import { apiFetch } from '../../lib/api'
 import { formInputClass, formLabelClass } from '../../lib/formStyles'
 import {

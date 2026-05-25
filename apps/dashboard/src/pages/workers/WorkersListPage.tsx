@@ -1,13 +1,13 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { DataTable } from '../../components/data/DataTable'
-import { WorkerStatusBadge } from '../../components/domain/StatusBadges'
+import { WorkerStatusBadge, WorkerApprovalStatusBadge } from '../../components/domain/StatusBadges'
 import { AddActionLink } from '../../components/ui/AddActionLink'
 import {
   ListFilterToolbar,
   type StatusFilterOption,
 } from '../../components/ui/ListFilterToolbar'
-import { useOperationsData } from '../../context/OperationsDataContext'
+import { useOperationsData } from '../../providers/OperationsDataContext'
 import type { DataTableColumn } from '../../types/dataTable'
 import type { Worker } from '@hire-me/types'
 
@@ -29,6 +29,7 @@ function workerMatchesSearch(worker: Worker, query: string): boolean {
     worker.location,
     worker.service,
     worker.status,
+    worker.approvalStatus,
     String(worker.internalRating),
     String(worker.customerRating),
   ]
@@ -76,6 +77,11 @@ export function WorkersListPage() {
         key: 'status',
         header: 'Status',
         cell: (row) => <WorkerStatusBadge status={row.status} />,
+      },
+      {
+        key: 'approvalStatus',
+        header: 'Approval',
+        cell: (row) => <WorkerApprovalStatusBadge status={row.approvalStatus} />,
       },
       {
         key: 'internalRating',

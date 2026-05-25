@@ -1,6 +1,6 @@
 import { type FormEvent, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../providers/AuthContext'
 
 /**
  * Standalone sign-in screen (no `DashboardLayout`). Replace mock `login` with API + JWT later.

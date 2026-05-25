@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { WorkerStatusBadge } from '../../components/domain/StatusBadges'
+import { WorkerStatusBadge, WorkerApprovalStatusBadge } from '../../components/domain/StatusBadges'
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog'
-import { useOperationsData } from '../../context/OperationsDataContext'
+import { useOperationsData } from '../../providers/OperationsDataContext'
 
 const actionBtn =
   'rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm transition-colors'
@@ -38,6 +38,10 @@ export function WorkerDetailPage() {
     {
       label: 'Status',
       value: <WorkerStatusBadge status={worker.status} />,
+    },
+    {
+      label: 'Approval status',
+      value: <WorkerApprovalStatusBadge status={worker.approvalStatus} />,
     },
     {
       label: 'Internal rating',

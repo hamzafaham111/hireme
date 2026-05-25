@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from 'react'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { useMemo } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
 import {
   IconBlog,
   IconBriefcase,
@@ -11,8 +11,8 @@ import {
 } from '../components/icons/NavIcons'
 import { DashboardLayout } from '../components/layout/DashboardLayout'
 import type { NavItem } from '../components/layout/Sidebar'
-import { useAuth } from '../context/AuthContext'
-import { useOperationsData } from '../context/OperationsDataContext'
+import { useAuth } from '../providers/AuthContext'
+import { useOperationsData } from '../providers/OperationsDataContext'
 import { dashboardHeader } from '../lib/dashboardHeader'
 
 /**
@@ -20,17 +20,9 @@ import { dashboardHeader } from '../lib/dashboardHeader'
  */
 export default function DashboardShell() {
   const location = useLocation()
-  const navigate = useNavigate()
   const { logout, user } = useAuth()
   const { opsError, clearOpsError } = useOperationsData()
   const { title, subtitle } = dashboardHeader(location.pathname)
-
-  /** Content editors only manage marketing blog posts — keep ops routes unreachable. */
-  useEffect(() => {
-    if (user?.role !== 'content_editor') return
-    if (location.pathname.startsWith('/blog')) return
-    navigate('/blog', { replace: true })
-  }, [user?.role, location.pathname, navigate])
 
   const navItems: NavItem[] = useMemo(() => {
     const all: NavItem[] = [
@@ -60,6 +52,12 @@ export default function DashboardShell() {
         to: '/users',
       },
       {
+        id: 'customers',
+        label: 'Customers',
+        icon: <IconUsers className="size-5" />,
+        to: '/customers',
+      },
+      {
         id: 'workers',
         label: 'Workers',
         icon: <IconWorker className="size-5" />,
@@ -78,9 +76,6 @@ export default function DashboardShell() {
         to: '/roles',
       },
     ]
-    if (user?.role === 'content_editor') {
-      return all.filter((item) => item.id === 'blog')
-    }
     return all
   }, [user?.role])
 
@@ -115,7 +110,7 @@ export default function DashboardShell() {
         </div>
       }
     >
-      {user?.role !== 'content_editor' && opsError ? (
+      {user?.role === 'admin' && opsError ? (
         <div
           className="mb-4 flex flex-col gap-2 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-900 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-100 sm:flex-row sm:items-center sm:justify-between"
           role="alert"

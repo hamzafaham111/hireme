@@ -5,13 +5,36 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { PrismaService } from '../common/prisma/prisma.service'
-import { workerToApi, workerStatusFromApi } from '../common/mappers/domain'
+import { workerToApi, workerStatusFromApi, workerApprovalStatusFromApi } from '../common/mappers/domain'
 import { CreateWorkerDto } from './dto/create-worker.dto'
 import { UpdateWorkerDto } from './dto/update-worker.dto'
 
 @Injectable()
 export class WorkersService {
   constructor(private readonly prisma: PrismaService) {}
+
+  /** Ensures `userId` is a `worker` role user and not linked to another profile. */
+  private async assertCanAssignWorkerUser(
+    userId: string,
+    excludeWorkerId?: string,
+  ): Promise<void> {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } })
+    if (!user) {
+      throw new BadRequestException('User not found for worker link.')
+    }
+    if (user.role !== 'worker') {
+      throw new BadRequestException('Only users with worker role can be linked to a worker profile.')
+    }
+    const existing = await this.prisma.worker.findFirst({
+      where: {
+        userId,
+        ...(excludeWorkerId ? { id: { not: excludeWorkerId } } : {}),
+      },
+    })
+    if (existing) {
+      throw new ConflictException('This user is already linked to a worker profile.')
+    }
+  }
 
   private uniqueOrderedSiteServiceIds(ids: string[]): string[] {
     const out: string[] = []
@@ -82,6 +105,9 @@ export class WorkersService {
       where: { workerId: dto.workerId.trim() },
     })
     if (taken) throw new ConflictException('Worker ID already in use.')
+    if (dto.userId) {
+      await this.assertCanAssignWorkerUser(dto.userId)
+    }
     const resolved = await this.resolveSiteServiceTitles(dto.siteServiceIds)
     const w = await this.prisma.worker.create({
       data: {
@@ -95,6 +121,7 @@ export class WorkersService {
         status: workerStatusFromApi(dto.status),
         internalRating: dto.internalRating,
         customerRating: dto.customerRating,
+        userId: dto.userId ?? null,
       },
     })
     return workerToApi(w, resolved.titlesById)
@@ -124,6 +151,14 @@ export class WorkersService {
       resolvedTitlesById = resolved.titlesById
     }
 
+    if (dto.userId !== undefined) {
+      if (dto.userId === null) {
+        /* unlink */
+      } else {
+        await this.assertCanAssignWorkerUser(dto.userId, id)
+      }
+    }
+
     const w = await this.prisma.worker.update({
       where: { id },
       data: {
@@ -133,8 +168,10 @@ export class WorkersService {
         ...(dto.location !== undefined ? { location: dto.location.trim() } : {}),
         ...(serviceFromCatalog ?? {}),
         ...(dto.status !== undefined ? { status: workerStatusFromApi(dto.status) } : {}),
+        ...(dto.approvalStatus !== undefined ? { approvalStatus: workerApprovalStatusFromApi(dto.approvalStatus) } : {}),
         ...(dto.internalRating !== undefined ? { internalRating: dto.internalRating } : {}),
         ...(dto.customerRating !== undefined ? { customerRating: dto.customerRating } : {}),
+        ...(dto.userId !== undefined ? { userId: dto.userId } : {}),
       },
     })
     if (resolvedTitlesById.size === 0) {
@@ -158,5 +195,66 @@ export class WorkersService {
       if (m) max = Math.max(max, parseInt(m[1], 10))
     }
     return `HM-W-${String(max + 1).padStart(4, '0')}`
+  }
+
+  /** Approve a worker account */
+  async approveWorker(workerId: string, approvedBy: string) {
+    const existing = await this.prisma.worker.findUnique({ where: { id: workerId } })
+    if (!existing) throw new NotFoundException('Worker not found.')
+
+    return this.prisma.worker.update({
+      where: { id: workerId },
+      data: {
+        approvalStatus: 'approved',
+        approvedAt: new Date(),
+        approvedBy,
+        rejectionReason: null, // Clear any previous rejection reason
+      },
+    })
+  }
+
+  /** Reject a worker account */
+  async rejectWorker(workerId: string, reason: string, rejectedBy: string) {
+    const existing = await this.prisma.worker.findUnique({ where: { id: workerId } })
+    if (!existing) throw new NotFoundException('Worker not found.')
+
+    return this.prisma.worker.update({
+      where: { id: workerId },
+      data: {
+        approvalStatus: 'rejected',
+        rejectionReason: reason,
+        approvedBy: rejectedBy, // Track who rejected
+        approvedAt: new Date(), // Track when rejected
+      },
+    })
+  }
+
+  /** Suspend a worker account */
+  async suspendWorker(workerId: string, reason: string, suspendedBy: string) {
+    const existing = await this.prisma.worker.findUnique({ where: { id: workerId } })
+    if (!existing) throw new NotFoundException('Worker not found.')
+
+    return this.prisma.worker.update({
+      where: { id: workerId },
+      data: {
+        approvalStatus: 'suspended',
+        rejectionReason: reason,
+        approvedBy: suspendedBy,
+      },
+    })
+  }
+
+  /** Get all workers pending approval */
+  async findPendingApprovals() {
+    const list = await this.prisma.worker.findMany({
+      where: { approvalStatus: 'pending' },
+      include: { user: true },
+      orderBy: { createdAt: 'asc' },
+    })
+    const titlesById = await this.buildTitlesByIdForWorkers(list)
+    return list.map((worker) => ({
+      ...workerToApi(worker, titlesById),
+      user: worker.user,
+    }))
   }
 }

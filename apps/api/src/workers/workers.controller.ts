@@ -15,9 +15,10 @@ import { CreateWorkerDto } from './dto/create-worker.dto'
 import { UpdateWorkerDto } from './dto/update-worker.dto'
 import { WorkersService } from './workers.service'
 
+/** Dashboard-only: worker directory CRUD (see `docs/API_AUTH_MATRIX.md`). */
 @Controller('workers')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
-@Roles('superadmin', 'admin', 'agent')
+@Roles('admin')
 export class WorkersController {
   constructor(private readonly workers: WorkersService) {}
 

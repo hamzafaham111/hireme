@@ -2,8 +2,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { Manrope, Sora } from 'next/font/google'
 import './globals.css'
-import { HomeHashScroll } from '@/components/home-hash'
-import { SiteFooter, SiteHeader, MobileTabBar } from '@/components/layout'
+import { WebProviders } from '@/components/providers/WebProviders'
 import { AppSplashScreen } from '@/components/splash'
 import { siteName, siteTagline } from '@/lib/site'
 
@@ -44,14 +43,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${manrope.variable} ${sora.variable} min-h-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] font-sans md:pb-0`}
+        className={`${manrope.variable} ${sora.variable} min-h-screen font-sans`}
       >
-        <AppSplashScreen />
-        <SiteHeader />
-        <HomeHashScroll />
-        <main>{children}</main>
-        <MobileTabBar />
-        <SiteFooter />
+        <WebProviders>
+          <AppSplashScreen />
+          {children}
+        </WebProviders>
       </body>
     </html>
   )

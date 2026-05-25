@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AddActionLink } from '../../components/ui/AddActionLink'
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog'
-import { useBlogData } from '../../context/BlogDataContext'
+import { useBlogData } from '../../providers/BlogDataContext'
 import { publicBlogPostUrl } from '../../lib/publicWebUrl'
 import type { BlogPost } from '@hire-me/types'
 

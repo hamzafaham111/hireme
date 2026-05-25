@@ -51,14 +51,14 @@ export class BlogController {
 
   @Get('posts/:id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('superadmin', 'admin', 'content_editor')
-  postById(@Param('id') id: string) {
-    return this.blog.findOneForManagers(id)
+  @Roles('admin')
+  postById(@Param('id') id: string, @CurrentUser() user: RequestUser) {
+    return this.blog.findOneForManagers(id, user)
   }
 
   @Post('uploads/image')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('superadmin', 'admin', 'content_editor')
+  @Roles('admin')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: memoryStorage(),
@@ -76,7 +76,10 @@ export class BlogController {
       },
     }),
   )
-  uploadBlogImage(@UploadedFile() file: Express.Multer.File | undefined) {
+  uploadBlogImage(
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @CurrentUser() _user: RequestUser,
+  ) {
     if (!file) {
       throw new BadRequestException('Missing file field `file`.')
     }
@@ -85,14 +88,14 @@ export class BlogController {
 
   @Post('posts')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('superadmin', 'admin', 'content_editor')
+  @Roles('admin')
   createPost(@Body() dto: CreateBlogPostDto, @CurrentUser() user: RequestUser) {
     return this.blog.create(dto, user)
   }
 
   @Patch('posts/:id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('superadmin', 'admin', 'content_editor')
+  @Roles('admin')
   updatePost(
     @Param('id') id: string,
     @Body() dto: UpdateBlogPostDto,
@@ -103,8 +106,8 @@ export class BlogController {
 
   @Delete('posts/:id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('superadmin', 'admin', 'content_editor')
-  removePost(@Param('id') id: string) {
-    return this.blog.remove(id)
+  @Roles('admin')
+  removePost(@Param('id') id: string, @CurrentUser() user: RequestUser) {
+    return this.blog.remove(id, user)
   }
 }

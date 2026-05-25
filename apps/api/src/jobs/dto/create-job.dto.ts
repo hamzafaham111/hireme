@@ -1,4 +1,4 @@
-import { IsIn, IsString, MinLength } from 'class-validator'
+import { IsIn, IsNumber, IsOptional, IsString, IsUUID, MinLength } from 'class-validator'
 
 const STATUSES = ['pending', 'in-progress', 'completed', 'cancelled'] as const
 
@@ -24,4 +24,20 @@ export class CreateJobDto {
 
   @IsString()
   assignedWorker!: string
+
+  @IsOptional()
+  @IsUUID()
+  customerUserId?: string
+
+  @IsOptional()
+  @IsNumber()
+  latitude?: number
+
+  @IsOptional()
+  @IsNumber()
+  longitude?: number
+
+  @IsOptional()
+  @IsUUID()
+  siteServiceId?: string
 }

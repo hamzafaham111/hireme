@@ -122,8 +122,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }>('/auth/login', {
       method: 'POST',
-      body: { email: trimmedEmail, password },
+      body: { identifier: trimmedEmail, password },
     })
+
+    if (res.user.role !== 'admin') {
+      throw new Error(
+        'This dashboard is for operations staff only. Customers and workers sign in on the public website.',
+      )
+    }
 
     const next: SessionPayload = {
       v: 2,

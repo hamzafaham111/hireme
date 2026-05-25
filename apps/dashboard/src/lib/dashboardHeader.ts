@@ -40,6 +40,27 @@ export function dashboardHeader(pathname: string): {
     }
   }
 
+  if (/\/customers\/[^/]+\/edit$/.test(pathname)) {
+    return {
+      title: 'Edit customer',
+      subtitle: 'Update customer profile',
+    }
+  }
+
+  if (/\/customers\/[^/]+$/.test(pathname)) {
+    return {
+      title: 'Customer',
+      subtitle: 'View profile details',
+    }
+  }
+
+  if (pathname.startsWith('/customers')) {
+    return {
+      title: 'Customers',
+      subtitle: 'Marketplace customer profiles',
+    }
+  }
+
   if (pathname.startsWith('/roles')) {
     return {
       title: 'Roles',

@@ -1,7 +1,7 @@
 import { type FormEvent, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Select } from '../../components/ui/Select'
-import { useOperationsData } from '../../context/OperationsDataContext'
+import { useOperationsData } from '../../providers/OperationsDataContext'
 import type { DashboardUser } from '@hire-me/types'
 
 const inputClass =
@@ -15,7 +15,7 @@ const defaultForm = (): Omit<DashboardUser, 'id' | 'password'> & {
   name: '',
   email: '',
   password: '',
-  role: 'agent',
+  role: 'admin',
   status: 'invited',
 })
 
@@ -207,10 +207,9 @@ export function UserFormPage() {
               value={form.role}
               onChange={(v) => update('role', v as DashboardUser['role'])}
               options={[
-                { value: 'superadmin', label: 'superadmin' },
-                { value: 'admin', label: 'admin' },
-                { value: 'agent', label: 'agent' },
-                { value: 'content_editor', label: 'content editor' },
+                { value: 'admin', label: 'admin (dashboard)' },
+                { value: 'customer', label: 'customer (web)' },
+                { value: 'worker', label: 'worker (web)' },
               ]}
             />
           </div>

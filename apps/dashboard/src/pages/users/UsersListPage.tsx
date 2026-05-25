@@ -4,7 +4,7 @@ import { DataTable } from '../../components/data/DataTable'
 import { UserRoleBadge, UserStatusBadge } from '../../components/domain/UserBadges'
 import { AddActionLink } from '../../components/ui/AddActionLink'
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog'
-import { useOperationsData } from '../../context/OperationsDataContext'
+import { useOperationsData } from '../../providers/OperationsDataContext'
 import type { DataTableColumn } from '../../types/dataTable'
 import type { DashboardUser } from '@hire-me/types'
 
@@ -25,6 +25,12 @@ export function UsersListPage() {
     id: string
     name: string
   } | null>(null)
+
+  // Filter to show only admin users
+  const adminUsers = useMemo(
+    () => users.filter((u) => u.role === 'admin'),
+    [users],
+  )
 
   const columns = useMemo<DataTableColumn<DashboardUser>[]>(
     () => [
@@ -84,15 +90,14 @@ export function UsersListPage() {
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-slate-600 dark:text-slate-400">
-          Internal team accounts (JWT auth later). Passwords stay hidden in the
-          grid; add or edit users to set credentials in this demo store.
+          Dashboard admin accounts. Marketplace customers and workers are managed in their respective sections.
         </p>
         <AddActionLink to="/users/new">Add user</AddActionLink>
       </div>
       <DataTable<DashboardUser>
         caption="Dashboard users"
         columns={columns}
-        rows={users}
+        rows={adminUsers}
         rowKey={(row) => row.id}
         tableClassName="min-w-[960px]"
       />

@@ -25,10 +25,9 @@ import { CreateSiteServiceDto } from './dto/create-site-service.dto'
 import { UpdateSiteServiceDto } from './dto/update-site-service.dto'
 import { SiteServicesRepository } from './site-services.repository'
 
-const OPS_ROLES = ['superadmin', 'admin', 'agent'] as const
-
 /**
- * Public list for the marketing site; JWT CRUD for the operations dashboard.
+ * Marketing catalog: `GET /public` (no auth).
+ * Dashboard: same resource shape as jobs/workers — `GET /` with JWT returns full list (incl. inactive).
  * Static path segments must be registered before `:id`.
  */
 @Controller('site-services')
@@ -38,21 +37,21 @@ export class SiteServicesController {
     private readonly imageUpload: ImageUploadService,
   ) {}
 
-  @Get()
+  @Get('public')
   listPublic() {
     return this.siteServices.listPublic()
   }
 
-  @Get('admin')
+  @Get()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(...OPS_ROLES)
-  listAdmin() {
+  @Roles('admin')
+  listAll() {
     return this.siteServices.listAdmin()
   }
 
   @Post('uploads/icon')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(...OPS_ROLES)
+  @Roles('admin')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: memoryStorage(),
@@ -79,28 +78,28 @@ export class SiteServicesController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(...OPS_ROLES)
+  @Roles('admin')
   create(@Body() dto: CreateSiteServiceDto) {
     return this.siteServices.create(dto)
   }
 
   @Get(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(...OPS_ROLES)
+  @Roles('admin')
   findOne(@Param('id') id: string) {
     return this.siteServices.findOneAdmin(id)
   }
 
   @Patch(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(...OPS_ROLES)
+  @Roles('admin')
   update(@Param('id') id: string, @Body() dto: UpdateSiteServiceDto) {
     return this.siteServices.update(id, dto)
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(...OPS_ROLES)
+  @Roles('admin')
   remove(@Param('id') id: string) {
     return this.siteServices.remove(id)
   }

@@ -3,6 +3,7 @@ import {
   IsArray,
   IsIn,
   IsNumber,
+  IsOptional,
   IsString,
   IsUUID,
   MinLength,
@@ -41,4 +42,9 @@ export class CreateWorkerDto {
 
   @IsNumber()
   customerRating!: number
+
+  /** Optional marketplace login (`User` with role `worker`). */
+  @IsOptional()
+  @IsUUID()
+  userId?: string
 }

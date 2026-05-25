@@ -10,7 +10,7 @@ import {
   ListFilterToolbar,
   type StatusFilterOption,
 } from '../../components/ui/ListFilterToolbar'
-import { useOperationsData } from '../../context/OperationsDataContext'
+import { useOperationsData } from '../../providers/OperationsDataContext'
 import type { DataTableColumn } from '../../types/dataTable'
 import type { Job } from '@hire-me/types'
 

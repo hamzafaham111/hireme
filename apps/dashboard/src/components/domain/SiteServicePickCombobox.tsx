@@ -16,7 +16,7 @@ function filterServices(services: SiteService[], query: string): SiteService[] {
 }
 
 export interface SiteServicePickComboboxProps {
-  /** From `GET /site-services/admin` (includes inactive). */
+  /** From `GET /site-services` with JWT (includes inactive). */
   services: SiteService[]
   /** Selected catalog row ids (`Worker.siteServiceIds`). */
   values: string[]
